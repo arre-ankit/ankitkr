@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const projects = [
+  {
+    name: 'Example Project 1',
+    description: 'A brief description of what this project does and why it matters.',
+    link: 'https://github.com/yourusername/project1',
+    tags: ['TypeScript', 'React', 'Tailwind'],
+  },
+  {
+    name: 'Example Project 2',
+    description: 'Another interesting project that showcases your skills and interests.',
+    link: 'https://github.com/yourusername/project2',
+    tags: ['Python', 'FastAPI', 'PostgreSQL'],
+  },
+  {
+    name: 'Example Project 3',
+    description: 'A third project demonstrating your range and expertise.',
+    link: 'https://github.com/yourusername/project3',
+    tags: ['Astro', 'MDX', 'Design'],
+  },
+];
+---
+
+<BaseLayout title="Projects" description="Things I've built">
+  <div class="space-y-12">
+    <div>
+      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4">Projects</h1>
+      <p class="text-lg text-gray-600 dark:text-gray-400">Things I've built</p>
+    </div>
+
+    <div class="space-y-8">
+      {projects.map((project) => (
+        <article class="group space-y-3 p-6 rounded-lg border border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 transition-colors">
+          <div class="flex items-start justify-between gap-4">
+            <h2 class="text-xl md:text-2xl font-semibold text-gray-900 dark:text-gray-100">
+              {project.name}
+            </h2>
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors whitespace-nowrap"
+            >
+              View →
+            </a>
+          </div>
+          <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+            {project.description}
+          </p>
+          <div class="flex flex-wrap gap-2">
+            {project.tags.map((tag) => (
+              <span class="text-xs px-2 py-1 rounded bg-gray-100 dark:bg-gray-900 text-gray-600 dark:text-gray-400">
+                {tag}
+              </span>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

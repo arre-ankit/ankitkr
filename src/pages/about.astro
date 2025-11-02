@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_CONFIG } from '../config';
+---
+
+<BaseLayout title="About" description="Learn more about me">
+  <div class="space-y-12">
+    <div>
+      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-8">About</h1>
+    </div>
+
+    <div class="prose prose-lg">
+      <p>
+        Hi, I'm {SITE_CONFIG.name}. This is my personal corner of the internet where I share my
+        thoughts, writing, and projects.
+      </p>
+
+      <p>
+        I'm passionate about technology, design, and creating thoughtful digital experiences.
+        This website is a place for me to document my journey, share what I'm learning, and
+        connect with others who share similar interests.
+      </p>
+
+      <h2>What I Do</h2>
+      <p>
+        I spend my time building things, writing about what I learn, and exploring new ideas.
+        My work spans across web development, design, and various creative projects.
+      </p>
+
+      <h2>Get in Touch</h2>
+      <p>
+        I'm always happy to connect with interesting people. Feel free to reach out if you'd
+        like to chat about technology, collaborate on a project, or just say hello.
+      </p>
+
+      <div class="not-prose flex flex-wrap gap-4 mt-8">
+        {SITE_CONFIG.author.email && (
+          <a
+            href={`mailto:${SITE_CONFIG.author.email}`}
+            class="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"
+          >
+            Email
+          </a>
+        )}
+        {SITE_CONFIG.author.twitter && (
+          <a
+            href={`https://twitter.com/${SITE_CONFIG.author.twitter.replace('@', '')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"
+          >
+            Twitter
+          </a>
+        )}
+        {SITE_CONFIG.author.github && (
+          <a
+            href={`https://github.com/${SITE_CONFIG.author.github}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"
+          >
+            GitHub
+          </a>
+        )}
+        {SITE_CONFIG.author.linkedin && (
+          <a
+            href={`https://linkedin.com/in/${SITE_CONFIG.author.linkedin}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"
+          >
+            LinkedIn
+          </a>
+        )}
+      </div>
+    </div>
+  </div>
+</BaseLayout>

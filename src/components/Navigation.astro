@@ -1,0 +1,47 @@
+---
+import { SITE_CONFIG } from '../config';
+import ThemeToggle from './ThemeToggle.astro';
+
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="sticky top-0 z-50 bg-white/80 dark:bg-gray-950/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">
+  <div class="max-w-3xl mx-auto px-6 py-4">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-8">
+        <a href="/" class="text-lg font-semibold text-gray-900 dark:text-gray-100 hover:text-gray-600 dark:hover:text-gray-400 transition-colors">
+          {SITE_CONFIG.name}
+        </a>
+        <div class="hidden md:flex items-center gap-6">
+          {SITE_CONFIG.nav.slice(1).map((item) => (
+            <a
+              href={item.href}
+              class={`text-sm transition-colors ${
+                currentPath === item.href || currentPath.startsWith(item.href + '/')
+                  ? 'text-gray-900 dark:text-gray-100 font-medium'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
+              }`}
+            >
+              {item.name}
+            </a>
+          ))}
+        </div>
+      </div>
+      <ThemeToggle />
+    </div>
+    <div class="md:hidden flex items-center gap-4 mt-4">
+      {SITE_CONFIG.nav.slice(1).map((item) => (
+        <a
+          href={item.href}
+          class={`text-sm transition-colors ${
+            currentPath === item.href || currentPath.startsWith(item.href + '/')
+              ? 'text-gray-900 dark:text-gray-100 font-medium'
+              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
+          }`}
+        >
+          {item.name}
+        </a>
+      ))}
+    </div>
+  </div>
+</nav>
