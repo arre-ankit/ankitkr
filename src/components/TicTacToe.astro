@@ -1,0 +1,341 @@
+---
+// Interactive Tic-Tac-Toe Game
+---
+
+<div class="relative border-t border-l border-r border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
+  <!-- Corner Accent -->
+  <div class="absolute top-0 left-0 w-3 h-3 border-l-2 border-t-2 border-brand-accent2"></div>
+
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="text-xs font-semibold text-brand-text/60 tracking-widest uppercase flex items-center gap-2">
+      <span class="w-1.5 h-1.5 bg-brand-accent2 rotate-45"></span>
+      Tic-Tac-Toe
+    </h3>
+    <button
+      id="reset-game"
+      class="text-xs text-brand-text/50 hover:text-brand-text transition-colors border border-dashed border-brand-text/10 hover:border-brand-text/20 px-2 py-1"
+    >
+      Reset
+    </button>
+  </div>
+
+  <!-- Game Status -->
+  <div id="game-status" class="text-sm text-brand-text/70 mb-3 h-6 font-mono flex items-center justify-center">
+    Your turn (X)
+  </div>
+
+  <!-- Game Board -->
+  <div class="relative grid grid-cols-3 gap-2 mb-3" id="game-board">
+    <!-- Winning Line Overlay -->
+    <svg id="winning-line" class="absolute inset-0 pointer-events-none opacity-0 transition-opacity duration-500" viewBox="0 0 100 100" style="z-index: 10;">
+      <line id="win-line" x1="0" y1="0" x2="0" y2="0" stroke="currentColor" stroke-width="3" stroke-linecap="round" class="text-brand-accent3" stroke-dasharray="200" stroke-dashoffset="200">
+        <animate attributeName="stroke-dashoffset" from="200" to="0" dur="0.5s" fill="freeze" begin="indefinite" id="line-animation" />
+      </line>
+    </svg>
+
+    <button class="game-cell aspect-square border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.03] hover:border-brand-accent2 transition-all flex items-center justify-center text-2xl font-bold group" data-cell="0">
+      <span class="cell-content opacity-0 group-hover:opacity-100 transition-opacity text-brand-text/20"></span>
+    </button>
+    <button class="game-cell aspect-square border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.03] hover:border-brand-accent2 transition-all flex items-center justify-center text-2xl font-bold group" data-cell="1">
+      <span class="cell-content opacity-0 group-hover:opacity-100 transition-opacity text-brand-text/20"></span>
+    </button>
+    <button class="game-cell aspect-square border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.03] hover:border-brand-accent2 transition-all flex items-center justify-center text-2xl font-bold group" data-cell="2">
+      <span class="cell-content opacity-0 group-hover:opacity-100 transition-opacity text-brand-text/20"></span>
+    </button>
+    <button class="game-cell aspect-square border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.03] hover:border-brand-accent2 transition-all flex items-center justify-center text-2xl font-bold group" data-cell="3">
+      <span class="cell-content opacity-0 group-hover:opacity-100 transition-opacity text-brand-text/20"></span>
+    </button>
+    <button class="game-cell aspect-square border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.03] hover:border-brand-accent2 transition-all flex items-center justify-center text-2xl font-bold group" data-cell="4">
+      <span class="cell-content opacity-0 group-hover:opacity-100 transition-opacity text-brand-text/20"></span>
+    </button>
+    <button class="game-cell aspect-square border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.03] hover:border-brand-accent2 transition-all flex items-center justify-center text-2xl font-bold group" data-cell="5">
+      <span class="cell-content opacity-0 group-hover:opacity-100 transition-opacity text-brand-text/20"></span>
+    </button>
+    <button class="game-cell aspect-square border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.03] hover:border-brand-accent2 transition-all flex items-center justify-center text-2xl font-bold group" data-cell="6">
+      <span class="cell-content opacity-0 group-hover:opacity-100 transition-opacity text-brand-text/20"></span>
+    </button>
+    <button class="game-cell aspect-square border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.03] hover:border-brand-accent2 transition-all flex items-center justify-center text-2xl font-bold group" data-cell="7">
+      <span class="cell-content opacity-0 group-hover:opacity-100 transition-opacity text-brand-text/20"></span>
+    </button>
+    <button class="game-cell aspect-square border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.03] hover:border-brand-accent2 transition-all flex items-center justify-center text-2xl font-bold group" data-cell="8">
+      <span class="cell-content opacity-0 group-hover:opacity-100 transition-opacity text-brand-text/20"></span>
+    </button>
+  </div>
+
+  <!-- Score Tracker -->
+  <div class="grid grid-cols-3 gap-2 text-center text-xs">
+    <div class="p-2 border border-dashed border-brand-text/10 bg-brand-text/[0.01]">
+      <p class="text-brand-accent3 font-mono" id="player-score">0</p>
+      <p class="text-brand-text/50">You</p>
+    </div>
+    <div class="p-2 border border-dashed border-brand-text/10 bg-brand-text/[0.01]">
+      <p class="text-brand-text/50 font-mono" id="tie-score">0</p>
+      <p class="text-brand-text/50">Tie</p>
+    </div>
+    <div class="p-2 border border-dashed border-brand-text/10 bg-brand-text/[0.01]">
+      <p class="text-brand-accent7 font-mono" id="ai-score">0</p>
+      <p class="text-brand-text/50">AI</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const cells = document.querySelectorAll('.game-cell');
+  const statusEl = document.getElementById('game-status');
+  const resetBtn = document.getElementById('reset-game');
+  const playerScoreEl = document.getElementById('player-score');
+  const tieScoreEl = document.getElementById('tie-score');
+  const aiScoreEl = document.getElementById('ai-score');
+  const winningLineEl = document.getElementById('winning-line');
+  const winLineEl = document.getElementById('win-line');
+  const lineAnimation = document.getElementById('line-animation');
+
+  let board = ['', '', '', '', '', '', '', '', ''];
+  let currentPlayer = 'X';
+  let gameActive = true;
+
+  // Load scores from localStorage
+  function loadScores() {
+    const savedScores = localStorage.getItem('tictactoe-scores');
+    if (savedScores) {
+      try {
+        return JSON.parse(savedScores);
+      } catch (e) {
+        return { player: 0, tie: 0, ai: 0 };
+      }
+    }
+    return { player: 0, tie: 0, ai: 0 };
+  }
+
+  // Save scores to localStorage
+  function saveScores() {
+    localStorage.setItem('tictactoe-scores', JSON.stringify(scores));
+  }
+
+  // Initialize scores from localStorage
+  let scores = loadScores();
+
+  // Update score display on load
+  if (playerScoreEl) playerScoreEl.textContent = scores.player.toString();
+  if (tieScoreEl) tieScoreEl.textContent = scores.tie.toString();
+  if (aiScoreEl) aiScoreEl.textContent = scores.ai.toString();
+
+  const winningConditions = [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+    [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+    [0, 4, 8], [2, 4, 6]             // Diagonals
+  ];
+
+  function updateStatus(message: string) {
+    if (statusEl) statusEl.textContent = message;
+  }
+
+  function checkWinner() {
+    for (const condition of winningConditions) {
+      const [a, b, c] = condition;
+      if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+        return { winner: board[a], line: condition };
+      }
+    }
+    return board.includes('') ? null : { winner: 'Tie', line: null };
+  }
+
+  function handleCellClick(e: Event) {
+    const cell = e.currentTarget as HTMLElement;
+    const cellIndex = parseInt(cell.dataset.cell || '0');
+
+    if (board[cellIndex] !== '' || !gameActive || currentPlayer !== 'X') return;
+
+    makeMove(cellIndex, 'X');
+
+    const result = checkWinner();
+    if (result) {
+      endGame(result.winner, result.line);
+      return;
+    }
+
+    currentPlayer = 'O';
+    updateStatus('AI thinking...');
+
+    setTimeout(() => {
+      aiMove();
+    }, 500);
+  }
+
+  function makeMove(index: number, player: string) {
+    board[index] = player;
+    const cell = document.querySelector(`[data-cell="${index}"]`);
+    const content = cell?.querySelector('.cell-content');
+    if (content) {
+      content.textContent = player;
+      content.classList.remove('opacity-0', 'text-brand-text/20');
+      content.classList.add('opacity-100');
+
+      if (player === 'X') {
+        content.classList.add('text-brand-accent3');
+      } else {
+        content.classList.add('text-brand-accent7');
+      }
+    }
+    if (cell) {
+      cell.classList.remove('hover:bg-brand-text/[0.03]', 'hover:border-brand-accent2');
+    }
+  }
+
+  function aiMove() {
+    if (!gameActive) return;
+
+    // AI with 60% smart play, 40% random (easier to beat!)
+    const playsSmart = Math.random() < 0.6;
+
+    let move: number | null;
+    if (playsSmart) {
+      // Smart move: Try to win, block player, or pick random
+      move = findBestMove('O') ?? findBestMove('X') ?? getRandomMove();
+    } else {
+      // Make a random move (makes it easier for player)
+      move = getRandomMove();
+    }
+
+    if (move !== null) {
+      makeMove(move, 'O');
+
+      const result = checkWinner();
+      if (result) {
+        endGame(result.winner, result.line);
+        return;
+      }
+
+      currentPlayer = 'X';
+      updateStatus('Your turn (X)');
+    }
+  }
+
+  function findBestMove(player: string): number | null {
+    for (const condition of winningConditions) {
+      const [a, b, c] = condition;
+      const values = [board[a], board[b], board[c]];
+      const playerCount = values.filter(v => v === player).length;
+      const emptyCount = values.filter(v => v === '').length;
+
+      if (playerCount === 2 && emptyCount === 1) {
+        if (board[a] === '') return a;
+        if (board[b] === '') return b;
+        if (board[c] === '') return c;
+      }
+    }
+    return null;
+  }
+
+  function getRandomMove(): number | null {
+    const available = board.map((val, idx) => val === '' ? idx : null).filter(v => v !== null);
+    return available.length > 0 ? available[Math.floor(Math.random() * available.length)] : null;
+  }
+
+  function drawWinningLine(lineIndices: number[]) {
+    if (!lineIndices || !winLineEl || !winningLineEl || !lineAnimation) return;
+
+    const [a, b, c] = lineIndices;
+
+    // Calculate line coordinates based on winning pattern
+    // Map cell indices to coordinates (in percentage)
+    const coords: { [key: number]: { x: number; y: number } } = {
+      0: { x: 16.67, y: 16.67 }, 1: { x: 50, y: 16.67 }, 2: { x: 83.33, y: 16.67 },
+      3: { x: 16.67, y: 50 },    4: { x: 50, y: 50 },    5: { x: 83.33, y: 50 },
+      6: { x: 16.67, y: 83.33 }, 7: { x: 50, y: 83.33 }, 8: { x: 83.33, y: 83.33 }
+    };
+
+    const start = coords[a];
+    const end = coords[c];
+
+    winLineEl.setAttribute('x1', start.x.toString());
+    winLineEl.setAttribute('y1', start.y.toString());
+    winLineEl.setAttribute('x2', end.x.toString());
+    winLineEl.setAttribute('y2', end.y.toString());
+
+    // Show the line with animation
+    winningLineEl.classList.remove('opacity-0');
+    winningLineEl.classList.add('opacity-100');
+
+    // Trigger the stroke animation
+    lineAnimation.beginElement();
+  }
+
+  function endGame(winner: string, winningLine: number[] | null) {
+    gameActive = false;
+
+    // Draw winning line if there is one (not a tie)
+    if (winningLine) {
+      drawWinningLine(winningLine);
+    }
+
+    // Make status element bigger and more prominent
+    if (statusEl) {
+      statusEl.classList.remove('text-sm', 'text-brand-text/70');
+      statusEl.classList.add('text-base', 'font-bold', 'text-brand-text');
+    }
+
+    if (winner === 'X') {
+      updateStatus('🎉 YOU WON! 🎉');
+      scores.player++;
+      if (playerScoreEl) playerScoreEl.textContent = scores.player.toString();
+      if (statusEl) statusEl.classList.add('text-brand-accent3');
+      if (winLineEl) winLineEl.classList.remove('text-brand-accent7');
+      if (winLineEl) winLineEl.classList.add('text-brand-accent3');
+    } else if (winner === 'O') {
+      updateStatus('💀 AI WON 💀');
+      scores.ai++;
+      if (aiScoreEl) aiScoreEl.textContent = scores.ai.toString();
+      if (statusEl) statusEl.classList.add('text-brand-accent7');
+      if (winLineEl) winLineEl.classList.remove('text-brand-accent3');
+      if (winLineEl) winLineEl.classList.add('text-brand-accent7');
+    } else {
+      updateStatus('🤝 DRAW 🤝');
+      scores.tie++;
+      if (tieScoreEl) tieScoreEl.textContent = scores.tie.toString();
+      if (statusEl) statusEl.classList.add('text-brand-accent2');
+    }
+
+    // Save updated scores to localStorage
+    saveScores();
+  }
+
+  function resetGame() {
+    board = ['', '', '', '', '', '', '', '', ''];
+    currentPlayer = 'X';
+    gameActive = true;
+
+    // Hide winning line
+    if (winningLineEl) {
+      winningLineEl.classList.remove('opacity-100');
+      winningLineEl.classList.add('opacity-0');
+    }
+
+    // Reset line animation
+    if (winLineEl) {
+      winLineEl.setAttribute('stroke-dashoffset', '200');
+    }
+
+    // Reset status styling to normal
+    if (statusEl) {
+      statusEl.classList.remove('text-base', 'font-bold', 'text-brand-accent3', 'text-brand-accent7', 'text-brand-accent2');
+      statusEl.classList.add('text-sm', 'text-brand-text/70');
+    }
+
+    updateStatus('Your turn (X)');
+
+    cells.forEach(cell => {
+      const content = cell.querySelector('.cell-content');
+      if (content) {
+        content.textContent = '';
+        content.classList.remove('opacity-100', 'text-brand-accent3', 'text-brand-accent7');
+        content.classList.add('opacity-0', 'text-brand-text/20');
+      }
+      cell.classList.add('hover:bg-brand-text/[0.03]', 'hover:border-brand-accent2');
+    });
+  }
+
+  // Event listeners
+  cells.forEach(cell => cell.addEventListener('click', handleCellClick));
+  resetBtn?.addEventListener('click', resetGame);
+</script>

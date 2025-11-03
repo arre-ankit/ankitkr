@@ -15,6 +15,15 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await entry.render();
 
+// Get all writing pieces for related essays
+const allWriting = await getCollection('writing', ({ data }) => {
+  return data.draft !== true;
+});
+const relatedWriting = allWriting
+  .filter((piece) => piece.slug !== entry.slug)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
 function formatDate(date: Date) {
   return new Date(date).toLocaleDateString('en-US', {
     year: 'numeric',
@@ -25,27 +34,126 @@ function formatDate(date: Date) {
 ---
 
 <BaseLayout title={entry.data.title} description={entry.data.description}>
-  <article class="space-y-8">
-    <div class="space-y-4">
-      <a
-        href="/writing"
-        class="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-        </svg>
-        Back to writing
-      </a>
-      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100">
-        {entry.data.title}
-      </h1>
-      <time class="block text-sm text-gray-600 dark:text-gray-400">
-        {formatDate(entry.data.date)}
-      </time>
-    </div>
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+    <!-- Main Content - Centered Essay -->
+    <article class="md:col-span-8 space-y-8 border-l border-r border-dashed border-brand-text/10 px-8 pb-12 pt-0">
+      <div class="space-y-4">
+        <a
+          href="/writing"
+          class="inline-flex items-center gap-2 text-sm text-brand-text/60 hover:text-brand-text transition-colors"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+          Back to writing
+        </a>
 
-    <div class="prose prose-lg">
-      <Content />
+        <h1 class="text-4xl font-semibold text-brand-text tracking-tight">
+          {entry.data.title}
+        </h1>
+
+        <div class="flex items-center gap-4 text-sm text-brand-text/60 border-l-2 border-dashed border-brand-text/20 pl-4">
+          <time class="font-mono">{formatDate(entry.data.date)}</time>
+          <span class="w-1 h-1 rounded-full bg-brand-text/30"></span>
+          <span>10 min read</span>
+        </div>
+      </div>
+
+      <div class="prose max-w-none
+        prose-headings:text-brand-text prose-headings:font-semibold prose-headings:tracking-tight
+        prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4 prose-h2:flex prose-h2:items-center prose-h2:gap-2 prose-h2:before:content-[''] prose-h2:before:w-1 prose-h2:before:h-6 prose-h2:before:bg-brand-accent2
+        prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
+        prose-p:text-brand-text/90 prose-p:leading-relaxed prose-p:mb-4
+        prose-a:text-brand-text prose-a:underline prose-a:underline-offset-4 prose-a:decoration-brand-text/40 hover:prose-a:decoration-brand-text prose-a:transition-colors
+        prose-strong:text-brand-text prose-strong:font-semibold
+        prose-ul:my-6 prose-ul:space-y-2 prose-li:text-brand-text/90 prose-li:leading-relaxed
+        prose-ol:my-6 prose-ol:space-y-2
+        prose-code:text-purple-600 prose-code:bg-purple-50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-sm prose-code:text-sm prose-code:font-mono prose-code:before:content-[''] prose-code:after:content-['']
+        prose-pre:relative prose-pre:bg-gradient-to-br prose-pre:from-purple-950/40 prose-pre:to-purple-900/30 prose-pre:border-2 prose-pre:border-dashed prose-pre:border-purple-500/20 prose-pre:rounded-none prose-pre:p-6 prose-pre:overflow-x-auto prose-pre:my-8
+        prose-pre:before:absolute prose-pre:before:top-0 prose-pre:before:left-0 prose-pre:before:w-3 prose-pre:before:h-3 prose-pre:before:border-l-2 prose-pre:before:border-t-2 prose-pre:before:border-purple-400
+        prose-pre:after:absolute prose-pre:after:bottom-0 prose-pre:after:right-0 prose-pre:after:w-3 prose-pre:after:h-3 prose-pre:after:border-r-2 prose-pre:after:border-b-2 prose-pre:after:border-purple-500
+        prose-pre:code:bg-transparent prose-pre:code:p-0 prose-pre:code:text-purple-200 prose-pre:code:text-sm
+        prose-blockquote:relative prose-blockquote:border-l-2 prose-blockquote:border-dashed prose-blockquote:border-brand-accent3/30 prose-blockquote:pl-6 prose-blockquote:py-2 prose-blockquote:my-6 prose-blockquote:italic prose-blockquote:text-brand-text/70
+        prose-blockquote:before:absolute prose-blockquote:before:left-0 prose-blockquote:before:top-0 prose-blockquote:before:w-1.5 prose-blockquote:before:h-1.5 prose-blockquote:before:bg-brand-accent3 prose-blockquote:before:rotate-45
+        prose-hr:border-t-2 prose-hr:border-dashed prose-hr:border-brand-text/10 prose-hr:my-12
+        prose-img:border-2 prose-img:border-dashed prose-img:border-brand-text/10 prose-img:my-8">
+        <Content />
+      </div>
+    </article>
+
+    <!-- Creative Sidebar for Writing -->
+    <div class="md:col-span-4 space-y-0 pt-0">
+      <!-- Essay Info Card -->
+      <div class="relative border-t border-l border-r border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
+        <div class="absolute top-0 left-0 w-3 h-3 border-l-2 border-t-2 border-brand-accent3"></div>
+
+        <h3 class="text-xs font-semibold text-brand-text/60 mb-4 tracking-widest uppercase flex items-center gap-2">
+          <span class="w-1.5 h-1.5 bg-brand-accent3 rotate-45"></span>
+          Key Takeaways
+        </h3>
+
+        <div class="space-y-3 text-xs text-brand-text/70 leading-relaxed">
+          <div class="flex items-start gap-2 p-3 border border-dashed border-brand-text/10 bg-brand-text/[0.01]">
+            <span class="text-brand-accent2 mt-0.5">▸</span>
+            <p>Long-form thoughts on important topics</p>
+          </div>
+          <div class="flex items-start gap-2 p-3 border border-dashed border-brand-text/10 bg-brand-text/[0.01]">
+            <span class="text-brand-accent2 mt-0.5">▸</span>
+            <p>In-depth analysis and reflection</p>
+          </div>
+          <div class="flex items-start gap-2 p-3 border border-dashed border-brand-text/10 bg-brand-text/[0.01]">
+            <span class="text-brand-accent2 mt-0.5">▸</span>
+            <p>Lessons learned over time</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Share Card -->
+      <div class="relative border-t border-l border-r border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
+        <h3 class="text-xs font-semibold text-brand-text/60 mb-4 tracking-widest uppercase flex items-center gap-2">
+          <span class="w-1.5 h-1.5 bg-brand-accent4 rotate-45"></span>
+          Share
+        </h3>
+
+        <div class="space-y-2">
+          <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(entry.data.title)}&url=${encodeURIComponent(Astro.url.href)}`} target="_blank" rel="noopener noreferrer" class="group flex items-center justify-between p-3 border border-dashed border-brand-text/10 hover:border-brand-text/20 bg-brand-text/[0.01] hover:bg-brand-text/[0.02] transition-all">
+            <span class="text-sm text-brand-text/70 group-hover:text-brand-text transition-colors">Twitter</span>
+            <svg class="w-4 h-4 text-brand-text/40 group-hover:text-brand-text/70 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </a>
+
+          <button onclick="navigator.clipboard.writeText(window.location.href)" class="group w-full flex items-center justify-between p-3 border border-dashed border-brand-text/10 hover:border-brand-text/20 bg-brand-text/[0.01] hover:bg-brand-text/[0.02] transition-all">
+            <span class="text-sm text-brand-text/70 group-hover:text-brand-text transition-colors">Copy link</span>
+            <svg class="w-4 h-4 text-brand-text/40 group-hover:text-brand-text/70 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Related Essays -->
+      {relatedWriting.length > 0 && (
+        <div class="relative border border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
+          <div class="absolute bottom-0 right-0 w-3 h-3 border-r-2 border-b-2 border-brand-accent5"></div>
+
+          <h3 class="text-xs font-semibold text-brand-text/60 mb-4 tracking-widest uppercase flex items-center gap-2">
+            <span class="w-1.5 h-1.5 bg-brand-accent5 rotate-45"></span>
+            Related Essays
+          </h3>
+
+          <div class="space-y-4">
+            {relatedWriting.map((piece) => (
+              <div class="group relative pl-4 border-l-2 border-dashed border-brand-text/10 hover:border-brand-accent5 transition-colors">
+                <a href={`/writing/${piece.slug}`} class="text-sm text-brand-text/80 hover:text-brand-text leading-snug block transition-colors">
+                  {piece.data.title}
+                </a>
+                <p class="text-xs text-brand-text/50 mt-1 font-mono">{formatDate(piece.data.date)}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
-  </article>
+  </div>
 </BaseLayout>

@@ -1,40 +1,50 @@
 @import "tailwindcss";
 
+@theme {
+  --color-brand-primary: #000000;
+  --color-brand-dashboard: #161618;
+  --color-brand-text: #f2f2f2;
+  --color-brand-accent1: #FAD000;
+  --color-brand-accent2: #818CF8;
+  --color-brand-accent3: #4ADE80;
+  --color-brand-accent4: #9C88FF;
+  --color-brand-accent5: #00F6FA;
+  --color-brand-accent6: #ED8B00;
+  --color-brand-accent7: #CC3D3A;
+  --color-brand-accent8: #FF2D1F;
+  --color-brand-accent9: #22C55E;
+  --color-brand-accent10: #9685FD;
+}
+
 @layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-  }
-
-  .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-  }
-
   * {
-    @apply border-gray-200 dark:border-gray-800;
+    border-color: #161618;
   }
 
   body {
-    @apply bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 antialiased;
+    background-color: #000000;
+    color: #f2f2f2;
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
+    @apply antialiased;
     font-feature-settings: 'rlig' 1, 'calt' 1;
   }
 
   ::selection {
-    @apply bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900;
+    @apply bg-brand-text text-brand-primary;
   }
 }
 
 @layer components {
   .prose {
-    @apply max-w-none text-gray-700 dark:text-gray-300;
+    @apply max-w-none text-brand-text;
   }
 
   .prose h1,
   .prose h2,
   .prose h3,
   .prose h4 {
-    @apply text-gray-900 dark:text-gray-100 font-semibold;
+    @apply text-brand-text font-semibold;
   }
 
   .prose h1 {
@@ -54,7 +64,7 @@
   }
 
   .prose a {
-    @apply text-gray-900 dark:text-gray-100 underline underline-offset-4 decoration-gray-400 dark:decoration-gray-600 hover:decoration-gray-900 dark:hover:decoration-gray-100 transition-colors;
+    @apply text-brand-text underline underline-offset-4 decoration-brand-text/40 hover:decoration-brand-text transition-colors;
   }
 
   .prose ul,
@@ -67,11 +77,11 @@
   }
 
   .prose code {
-    @apply bg-gray-100 dark:bg-gray-900 px-1.5 py-0.5 rounded text-sm font-mono;
+    @apply bg-brand-primary px-1.5 py-0.5 rounded text-sm font-mono;
   }
 
   .prose pre {
-    @apply bg-gray-100 dark:bg-gray-900 p-4 rounded-lg overflow-x-auto mb-4;
+    @apply bg-brand-primary p-4 rounded-lg overflow-x-auto mb-4;
   }
 
   .prose pre code {
@@ -79,7 +89,7 @@
   }
 
   .prose blockquote {
-    @apply border-l-4 border-gray-300 dark:border-gray-700 pl-4 italic my-4;
+    @apply border-l-4 border-brand-text/20 pl-4 italic my-4;
   }
 
   .prose img {
@@ -87,6 +97,6 @@
   }
 
   .prose hr {
-    @apply my-8 border-gray-200 dark:border-gray-800;
+    @apply my-8 border-brand-text/20;
   }
 }

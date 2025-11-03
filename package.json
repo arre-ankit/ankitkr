@@ -14,9 +14,9 @@
     "astro": "^5.15.3",
     "tailwindcss": "^4.1.16"
   },
-  "description": "```sh npm create astro@latest -- --template minimal ```",
+  "description": "Ankit's personal website",
   "main": "index.js",
   "keywords": [],
-  "author": "",
+  "author": "Ankit",
   "license": "ISC"
 }

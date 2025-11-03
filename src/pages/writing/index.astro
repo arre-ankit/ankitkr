@@ -8,42 +8,173 @@ const allWriting = await getCollection('writing', ({ data }) => {
 
 const sortedWriting = allWriting.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-function formatDate(date: Date) {
-  return new Date(date).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
-}
+// Define writing pieces with categories for better organization
+const writingPieces = sortedWriting.length > 0 ? sortedWriting : [
+  { title: 'Developer Experience', slug: '#', category: 'Development' },
+  { title: 'Developer Marketing', slug: '#', category: 'Development' },
+  { title: 'Developer Relations', slug: '#', category: 'Development' },
+  { title: 'Developer Products', slug: '#', category: 'Development' },
+  { title: 'Documentation', slug: '#', category: 'Development' },
+  { title: 'Community Moderation', slug: '#', category: 'Community' },
+  { title: 'Reflections on the React community', slug: '#', category: 'Community' },
+  { title: '5 Things I Learned from 5 Years at Company', slug: '#', category: 'Career' },
+  { title: 'AI Agents', slug: '#', category: 'Technology' },
+  { title: 'Personal Software', slug: '#', category: 'Technology' },
+  { title: 'My Stack', slug: '#', category: 'Technology' },
+  { title: 'Things I Believe', slug: '#', category: 'Philosophy' },
+  { title: 'How I\'m Writing CSS', slug: '#', category: 'Development' },
+  { title: 'Understanding AI', slug: '#', category: 'Technology' },
+  { title: 'Product Engineers', slug: '#', category: 'Career' },
+  { title: 'Rust is Eating JavaScript', slug: '#', category: 'Technology' },
+  { title: 'The Story of Heroku', slug: '#', category: 'Technology' },
+];
 ---
 
 <BaseLayout title="Writing" description="Essays and long-form thoughts">
-  <div class="space-y-12">
-    <div>
-      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4">Writing</h1>
-      <p class="text-lg text-gray-600 dark:text-gray-400">Essays and long-form thoughts</p>
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+    <!-- Main Content - Centered Writing List -->
+    <div class="md:col-span-8 space-y-8 border-brand-text/10 px-8 pb-12 pt-0">
+      <div class="space-y-2">
+        <h1 class="text-4xl font-semibold text-brand-text tracking-tight">Writing</h1>
+        <p class="text-brand-text/70">Essays and long-form thoughts</p>
+      </div>
+
+      <div>
+        <p class="text-brand-text/80 mb-6 leading-relaxed">
+          I write about technology, development, and the lessons I've learned along the way. Here's a collection of my essays:
+        </p>
+
+        <div class="space-y-3">
+          {writingPieces.map((piece, index) => (
+            <div class="group flex items-start gap-4 py-3 border-b border-dashed border-brand-text/10 last:border-b-0 hover:bg-brand-text/[0.01] transition-all px-2 -mx-2">
+              <span class="text-xs font-mono text-brand-text/40 mt-0.5 w-8">{String(index + 1).padStart(2, '0')}</span>
+              <div class="flex-1">
+                <a
+                  href={sortedWriting.length > 0 ? `/writing/${piece.slug}` : piece.slug}
+                  class="text-brand-text hover:text-brand-accent2 transition-colors inline-flex items-center gap-2"
+                >
+                  <span>{sortedWriting.length > 0 ? piece.data.title : piece.title}</span>
+                  <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                  </svg>
+                </a>
+                {!sortedWriting.length && piece.category && (
+                  <span class="ml-3 text-xs text-brand-text/50 font-mono">· {piece.category}</span>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
 
-    <div class="space-y-8">
-      {sortedWriting.map((piece) => (
-        <article class="group">
-          <a href={`/writing/${piece.slug}`} class="block space-y-2">
-            <time class="text-sm text-gray-500 dark:text-gray-500 font-mono">
-              {formatDate(piece.data.date)}
-            </time>
-            <h2 class="text-xl md:text-2xl font-semibold text-gray-900 dark:text-gray-100 group-hover:text-gray-600 dark:group-hover:text-gray-400 transition-colors">
-              {piece.data.title}
-            </h2>
-            <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-              {piece.data.description}
-            </p>
-          </a>
-        </article>
-      ))}
-    </div>
+    <!-- Creative Sidebar for Writing -->
+    <div class="md:col-span-4 space-y-0 pt-0">
+      <!-- Featured Essays Card -->
+      <div class="relative border-t border-l border-r border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
+        <div class="absolute top-0 left-0 w-3 h-3 border-l-2 border-t-2 border-brand-accent3"></div>
 
-    {sortedWriting.length === 0 && (
-      <p class="text-gray-600 dark:text-gray-400">No writing yet. Check back soon!</p>
-    )}
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-2xl">⭐</span>
+          <h3 class="text-xs font-semibold text-brand-text/60 tracking-widest uppercase">Featured</h3>
+        </div>
+
+        <div class="space-y-3">
+          <div class="pl-4 border-l-2 border-dashed border-brand-accent3/30 hover:border-brand-accent3 transition-colors">
+            <a href="#" class="text-sm text-brand-text/80 hover:text-brand-text leading-snug block transition-colors font-medium">
+              Things I Believe
+            </a>
+            <p class="text-xs text-brand-text/50 mt-1">Core principles that guide my work</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Writing Stats -->
+      <div class="relative border-t border-l border-r border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
+        <h3 class="text-xs font-semibold text-brand-text/60 mb-4 tracking-widest uppercase flex items-center gap-2">
+          <span class="w-1.5 h-1.5 bg-brand-accent2 rotate-45"></span>
+          Stats
+        </h3>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div class="text-center p-3 border border-dashed border-brand-text/10 bg-brand-text/[0.01]">
+            <p class="text-2xl font-semibold text-brand-text mb-1">{writingPieces.length}</p>
+            <p class="text-xs text-brand-text/60">Essays</p>
+          </div>
+
+          <div class="text-center p-3 border border-dashed border-brand-text/10 bg-brand-text/[0.01]">
+            <p class="text-2xl font-semibold text-brand-text mb-1">50k</p>
+            <p class="text-xs text-brand-text/60">Words</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Topics I Cover -->
+      <div class="relative border-t border-l border-r border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
+        <h3 class="text-xs font-semibold text-brand-text/60 mb-4 tracking-widest uppercase flex items-center gap-2">
+          <span class="w-1.5 h-1.5 bg-brand-accent4 rotate-45"></span>
+          Topics
+        </h3>
+
+        <div class="flex flex-wrap gap-2">
+          <span class="px-3 py-1.5 border border-dashed border-brand-text/10 bg-brand-text/[0.01] text-xs text-brand-text/70">
+            Development
+          </span>
+          <span class="px-3 py-1.5 border border-dashed border-brand-text/10 bg-brand-text/[0.01] text-xs text-brand-text/70">
+            Technology
+          </span>
+          <span class="px-3 py-1.5 border border-dashed border-brand-text/10 bg-brand-text/[0.01] text-xs text-brand-text/70">
+            Career
+          </span>
+          <span class="px-3 py-1.5 border border-dashed border-brand-text/10 bg-brand-text/[0.01] text-xs text-brand-text/70">
+            Philosophy
+          </span>
+          <span class="px-3 py-1.5 border border-dashed border-brand-text/10 bg-brand-text/[0.01] text-xs text-brand-text/70">
+            Community
+          </span>
+        </div>
+      </div>
+
+      <!-- My Writing Process -->
+      <div class="relative border-t border-l border-r border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
+        <h3 class="text-xs font-semibold text-brand-text/60 mb-4 tracking-widest uppercase flex items-center gap-2">
+          <span class="w-1.5 h-1.5 bg-brand-accent5 rotate-45"></span>
+          How I Write
+        </h3>
+
+        <div class="space-y-3 text-xs text-brand-text/70 leading-relaxed">
+          <div class="flex items-start gap-2">
+            <span class="text-brand-accent5 mt-0.5">▸</span>
+            <p>I write to clarify my thinking</p>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="text-brand-accent5 mt-0.5">▸</span>
+            <p>Every essay starts as a collection of notes</p>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="text-brand-accent5 mt-0.5">▸</span>
+            <p>I prefer depth over frequency</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subscribe CTA -->
+      <div class="relative border border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01] group hover:bg-brand-text/[0.03] transition-all">
+        <div class="absolute bottom-0 right-0 w-3 h-3 border-r-2 border-b-2 border-brand-accent3"></div>
+
+        <h3 class="text-xs font-semibold text-brand-text/60 mb-3 tracking-widest uppercase">Get Updates</h3>
+
+        <p class="text-sm text-brand-text/70 leading-relaxed mb-4">
+          Subscribe to be notified when I publish new essays.
+        </p>
+
+        <a href="mailto:subscribe@example.com" class="inline-flex items-center gap-2 text-sm font-medium text-brand-text hover:text-brand-accent3 transition-colors border-b border-dashed border-brand-text/20 hover:border-brand-accent3 pb-0.5">
+          Subscribe
+          <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+          </svg>
+        </a>
+      </div>
+    </div>
   </div>
 </BaseLayout>

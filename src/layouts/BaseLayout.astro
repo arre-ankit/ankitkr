@@ -2,7 +2,6 @@
 import '../styles/global.css';
 import BaseHead from '../components/BaseHead.astro';
 import Navigation from '../components/Navigation.astro';
-import Footer from '../components/Footer.astro';
 
 interface Props {
   title?: string;
@@ -18,11 +17,17 @@ const { title, description, image } = Astro.props;
   <head>
     <BaseHead title={title} description={description} image={image} />
   </head>
-  <body>
+  <body class="min-h-screen relative">
+    <!-- Grid System Overlay - Fixed positioned grid lines -->
+    <!-- Vertical Grid Lines -->
+    <div class="fixed top-0 bottom-0 w-px border-l border-dashed border-brand-text/10 pointer-events-none z-0" style="left: calc(50% - min(100vw / 2 - 2rem, 28rem));"></div>
+    <div class="fixed top-0 bottom-0 w-px border-r border-dashed border-brand-text/10 pointer-events-none z-0" style="right: calc(50% - min(100vw / 2 - 2rem, 32rem));"></div>
+    <!-- Grid Connection Nodes -->
     <Navigation />
-    <main class="max-w-3xl mx-auto px-6 py-8 md:py-12">
-      <slot />
+    <main class="flex justify-center px-8 py-12 relative z-10">
+      <div class="w-full max-w-4xl">
+        <slot />
+      </div>
     </main>
-    <Footer />
   </body>
 </html>

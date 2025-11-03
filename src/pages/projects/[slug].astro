@@ -1,0 +1,324 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import VideoPlayer from '../../components/VideoPlayer.astro';
+
+export async function getStaticPaths() {
+  const projects = [
+    {
+      slug: 'example-project-1',
+      name: 'Example Project 1',
+      description: 'A comprehensive description of what this project does and why it matters. This project demonstrates advanced web development techniques using modern frameworks and best practices.',
+      link: 'https://github.com/arre-ankit/project1',
+      demo: 'https://project1.demo.com',
+      videoUrl: 'https://www.youtube.com/watch?v=9PoGWIK9DmE',
+      tags: ['TypeScript', 'React', 'Tailwind'],
+      status: 'Active',
+      year: '2024',
+      features: [
+        'Responsive design with Tailwind CSS',
+        'Type-safe development with TypeScript',
+        'Modern React patterns and hooks',
+        'Optimized performance',
+      ],
+      challenges: 'Building a scalable architecture that could handle complex state management while maintaining performance.',
+      learnings: 'Deepened understanding of React performance optimization and TypeScript best practices.',
+    },
+    {
+      slug: 'example-project-2',
+      name: 'Example Project 2',
+      description: 'Another interesting project that showcases your skills and interests. Built with Python and FastAPI, this backend service handles complex data processing.',
+      link: 'https://github.com/yourusername/project2',
+      demo: 'https://project2.demo.com',
+      videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+      tags: ['Python', 'FastAPI', 'PostgreSQL'],
+      status: 'Active',
+      year: '2023',
+      features: [
+        'RESTful API with FastAPI',
+        'PostgreSQL database integration',
+        'Async request handling',
+        'Comprehensive API documentation',
+      ],
+      challenges: 'Designing an efficient database schema and optimizing queries for large datasets.',
+      learnings: 'Gained expertise in async Python and database optimization techniques.',
+    },
+    {
+      slug: 'example-project-3',
+      name: 'Example Project 3',
+      description: 'A third project demonstrating your range and expertise. This design-focused project uses Astro and MDX for content-rich experiences.',
+      link: 'https://github.com/yourusername/project3',
+      demo: null,
+      videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+      tags: ['Astro', 'MDX', 'Design'],
+      status: 'Archived',
+      year: '2023',
+      features: [
+        'Static site generation with Astro',
+        'Rich content with MDX',
+        'Custom design system',
+        'SEO optimized',
+      ],
+      challenges: 'Creating a cohesive design system that works across different content types.',
+      learnings: 'Learned the power of static site generation and component-driven design.',
+    },
+  ];
+
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+
+// Get other projects for "More Projects" section
+const allProjects = [
+  {
+    slug: 'example-project-1',
+    name: 'Example Project 1',
+    tags: ['TypeScript', 'React', 'Tailwind'],
+  },
+  {
+    slug: 'example-project-2',
+    name: 'Example Project 2',
+    tags: ['Python', 'FastAPI', 'PostgreSQL'],
+  },
+  {
+    slug: 'example-project-3',
+    name: 'Example Project 3',
+    tags: ['Astro', 'MDX', 'Design'],
+  },
+];
+
+const relatedProjects = allProjects
+  .filter((p) => p.slug !== project.slug)
+  .slice(0, 2);
+---
+
+<BaseLayout title={project.name} description={project.description}>
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+    <!-- Main Content - Centered Project Details -->
+    <article class="md:col-span-8 space-y-8 border-brand-text/10 px-8 pb-12 pt-0">
+      <div class="space-y-4">
+        <a
+          href="/projects"
+          class="inline-flex items-center gap-2 text-sm text-brand-text/60 hover:text-brand-text transition-colors"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+          Back to projects
+        </a>
+
+        <div class="flex items-center gap-3 flex-wrap">
+          <h1 class="text-4xl md:text-5xl font-semibold text-brand-text tracking-tight">
+            {project.name}
+          </h1>
+        </div>
+
+        <div class="flex items-center gap-3 flex-wrap">
+          <div class="flex flex-wrap gap-2">
+            {project.link && (
+              <a href={project.link} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-3 py-1.5 border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.02] hover:border-brand-text/20 text-xs text-brand-text/70 transition-all">
+                <svg class="w-4 h-4 text-brand-text/70" fill="currentColor" viewBox="0 0 24 24">
+                  <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/>
+                </svg>
+                GitHub
+              </a>
+            )}
+            {project.demo && (
+              <a href={project.demo} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-3 py-1.5 border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.02] hover:border-brand-accent3 text-xs text-brand-text/70 transition-all">
+              <svg class="w-4 h-4 text-brand-text/40 group-hover:text-brand-text/70 transition-colors" fill="none" viewBox="0 0 24 24" stroke="gray">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+              </svg>
+                Live Demo
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <!-- Video Player -->
+      {project.videoUrl && (
+        <VideoPlayer videoUrl={project.videoUrl} title={project.name} />
+      )}
+
+      <!-- Project Description -->
+      <div class="space-y-4 text-brand-text/80 leading-relaxed">
+        <p class="text-lg">{project.description}</p>
+      </div>
+
+      <!-- Features -->
+      <div class="space-y-4">
+        <h2 class="text-2xl font-semibold text-brand-text flex items-center gap-2">
+          <span class="w-1 h-8 bg-brand-accent2"></span>
+          Key Features
+        </h2>
+        <ul class="space-y-3 ml-6 border-l-2 border-dashed border-brand-text/20 pl-6">
+          {project.features.map((feature) => (
+            <li class="flex items-start gap-3 text-brand-text/80">
+              <span class="w-1.5 h-1.5 bg-brand-accent2 rotate-45 mt-2"></span>
+              {feature}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Challenges -->
+      <div class="space-y-4 p-6 border border-dashed border-brand-text/10 bg-brand-text/[0.01]">
+        <h2 class="text-xl font-semibold text-brand-text flex items-center gap-2">
+          <span class="w-1 h-6 bg-brand-accent4"></span>
+          Challenges
+        </h2>
+        <p class="text-brand-text/80 leading-relaxed">{project.challenges}</p>
+      </div>
+
+      <!-- Learnings -->
+      <div class="space-y-4 p-6 border border-dashed border-brand-text/10 bg-brand-text/[0.01]">
+        <h2 class="text-xl font-semibold text-brand-text flex items-center gap-2">
+          <span class="w-1 h-6 bg-brand-accent5"></span>
+          What I Learned
+        </h2>
+        <p class="text-brand-text/80 leading-relaxed">{project.learnings}</p>
+      </div>
+
+      <!-- Links -->
+      <div class="flex gap-3 pt-4">
+        <a
+          href={project.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 px-6 py-3 border border-dashed border-brand-text/20 hover:border-brand-text bg-brand-text/[0.01] hover:bg-brand-text/[0.02] transition-all text-brand-text font-medium"
+        >
+          View Code
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+          </svg>
+        </a>
+        {project.demo && (
+          <a
+            href={project.demo}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-6 py-3 border border-dashed border-brand-accent2 bg-brand-accent2/5 hover:bg-brand-accent2/10 transition-all text-brand-accent2 font-medium"
+          >
+            Live Demo
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+            </svg>
+          </a>
+        )}
+      </div>
+    </article>
+
+    <!-- Creative Sidebar for Project -->
+    <div class="md:col-span-4 space-y-0 pt-0">
+      <!-- Project Info -->
+      <div class="relative border-t border-l border-r border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
+        <div class="absolute top-0 left-0 w-3 h-3 border-l-2 border-t-2 border-brand-accent3"></div>
+
+        <h3 class="text-xs font-semibold text-brand-text/60 mb-4 tracking-widest uppercase flex items-center gap-2">
+          <span class="w-1.5 h-1.5 bg-brand-accent3 rotate-45"></span>
+          Project Info
+        </h3>
+
+        <div class="space-y-3 text-sm text-brand-text/70">
+          <div class="flex items-center justify-between p-3 border border-dashed border-brand-text/10 bg-brand-text/[0.01]">
+            <span>Year</span>
+            <span class="font-mono text-xs text-brand-text/60">{project.year}</span>
+          </div>
+
+          <div class="flex items-center justify-between p-3 border border-dashed border-brand-text/10 bg-brand-text/[0.01]">
+            <span>Status</span>
+            <span class={`font-mono text-xs ${project.status === 'Active' ? 'text-brand-accent3' : 'text-brand-text/60'}`}>
+              {project.status}
+            </span>
+          </div>
+
+          <div class="flex items-center justify-between p-3 border border-dashed border-brand-text/10 bg-brand-text/[0.01]">
+            <span>Stack</span>
+            <span class="font-mono text-xs text-brand-text/60">{project.tags.length} tech</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tech Stack -->
+      <div class="relative border-t border-l border-r border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
+        <h3 class="text-xs font-semibold text-brand-text/60 mb-4 tracking-widest uppercase flex items-center gap-2">
+          <span class="w-1.5 h-1.5 bg-brand-accent2 rotate-45"></span>
+          Technologies
+        </h3>
+
+        <div class="grid grid-cols-3 gap-3">
+          {project.tags.map((tag) => (
+            <div class="aspect-square border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.02] hover:border-brand-accent2 transition-all flex flex-col items-center justify-center p-3 group">
+              <div class="text-2xl mb-1 group-hover:scale-110 transition-transform">
+                {tag === 'TypeScript' && '📘'}
+                {tag === 'React' && '⚛️'}
+                {tag === 'Tailwind' && '🎨'}
+                {tag === 'Python' && '🐍'}
+                {tag === 'FastAPI' && '⚡'}
+                {tag === 'PostgreSQL' && '🐘'}
+                {tag === 'Astro' && '🚀'}
+                {tag === 'MDX' && '📝'}
+                {tag === 'Design' && '✨'}
+              </div>
+              <p class="text-[10px] text-brand-text/60 text-center leading-tight">{tag}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="relative border-t border-l border-r border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
+        <h3 class="text-xs font-semibold text-brand-text/60 mb-4 tracking-widest uppercase flex items-center gap-2">
+          <span class="w-1.5 h-1.5 bg-brand-accent4 rotate-45"></span>
+          Links
+        </h3>
+
+        <div class="space-y-2">
+          <a href={project.link} target="_blank" rel="noopener noreferrer" class="group flex items-center justify-between p-3 border border-dashed border-brand-text/10 hover:border-brand-text/20 bg-brand-text/[0.01] hover:bg-brand-text/[0.02] transition-all">
+            <span class="text-sm text-brand-text/70 group-hover:text-brand-text transition-colors">GitHub</span>
+            <svg class="w-4 h-4 text-brand-text/40 group-hover:text-brand-text/70 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+            </svg>
+          </a>
+
+          {project.demo && (
+            <a href={project.demo} target="_blank" rel="noopener noreferrer" class="group flex items-center justify-between p-3 border border-dashed border-brand-text/10 hover:border-brand-text/20 bg-brand-text/[0.01] hover:bg-brand-text/[0.02] transition-all">
+              <span class="text-sm text-brand-text/70 group-hover:text-brand-text transition-colors">Live Demo</span>
+              <svg class="w-4 h-4 text-brand-text/40 group-hover:text-brand-text/70 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+              </svg>
+            </a>
+          )}
+        </div>
+      </div>
+
+      <!-- More Projects -->
+      <div class="relative border border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
+        <div class="absolute bottom-0 right-0 w-3 h-3 border-r-2 border-b-2 border-brand-accent5"></div>
+
+        <h3 class="text-xs font-semibold text-brand-text/60 mb-4 tracking-widest uppercase flex items-center gap-2">
+          <span class="w-1.5 h-1.5 bg-brand-accent5 rotate-45"></span>
+          More Projects
+        </h3>
+
+        <div class="space-y-4">
+          {relatedProjects.map((p) => (
+            <div class="group relative pl-4 border-l-2 border-dashed border-brand-text/10 hover:border-brand-accent5 transition-colors">
+              <a href={`/projects/${p.slug}`} class="text-sm text-brand-text/80 hover:text-brand-text leading-snug block transition-colors">
+                {p.name}
+              </a>
+              <div class="flex gap-1 mt-1">
+                {p.tags.slice(0, 2).map((tag) => (
+                  <span class="text-xs text-brand-text/50 font-mono">{tag}</span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
