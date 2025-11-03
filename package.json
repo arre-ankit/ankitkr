@@ -9,6 +9,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^12.6.10",
     "@astrojs/mdx": "^4.3.9",
     "@tailwindcss/vite": "^4.1.16",
     "astro": "^5.15.3",
@@ -18,5 +19,8 @@
   "main": "index.js",
   "keywords": [],
   "author": "Ankit",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "wrangler": "^4.45.3"
+  }
 }
