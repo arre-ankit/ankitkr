@@ -134,6 +134,21 @@ const sortedWriting = writingEntries.sort((a, b) => b.data.date.valueOf() - a.da
         </div>
       </section>
 
+      <!-- ═══ WRITING ═══ -->
+      <section>
+        <h2 class="text-xl font-semibold mb-6 flex items-center gap-2">
+          <span class="w-1 h-6 bg-brand-accent4"></span>
+          Writing
+        </h2>
+        <ul class="space-y-2 pl-4 border-l border-dashed border-brand-text/20">
+          {sortedWriting.map((entry) => (
+            <li>
+              <a href={`/writing/${entry.slug}`} class="underline underline-offset-4 decoration-brand-text/40 hover:decoration-brand-text transition-colors text-[15px]">{entry.data.title}</a>
+            </li>
+          ))}
+        </ul>
+      </section>
+
       <!-- ═══ PROJECTS ═══ -->
       <section>
         <h2 class="text-xl font-semibold mb-6 flex items-center gap-2">
@@ -148,7 +163,7 @@ const sortedWriting = writingEntries.sort((a, b) => b.data.date.valueOf() - a.da
                 <div class="flex items-center gap-3">
                   <h3 class="text-base font-semibold text-brand-text/95">TermReel</h3>
                   <svg class="exp-dropdown-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-                  <a href="https://github.com/arre-ankit" target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono text-brand-text/40 hover:text-brand-accent2 transition-colors" aria-label="View TermReel on GitHub">GitHub</a>
+                  <a href="https://github.com/arre-ankit/termreel" target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono text-brand-text/40 hover:text-brand-accent2 transition-colors" aria-label="View TermReel on GitHub">GitHub</a>
                 </div>
                 <p class="text-sm text-brand-text/50 mt-0.5">AI-powered CLI for terminal demo recordings</p>
               </div>
@@ -171,7 +186,7 @@ const sortedWriting = writingEntries.sort((a, b) => b.data.date.valueOf() - a.da
                 <div class="flex items-center gap-3">
                   <h3 class="text-base font-semibold text-brand-text/95">PullScan</h3>
                   <svg class="exp-dropdown-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-                  <a href="https://github.com/arre-ankit" target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono text-brand-text/40 hover:text-brand-accent2 transition-colors" aria-label="View PullScan on GitHub">GitHub</a>
+                  <a href="https://github.com/arre-ankit/pullscan" target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono text-brand-text/40 hover:text-brand-accent2 transition-colors" aria-label="View PullScan on GitHub">GitHub</a>
                 </div>
                 <p class="text-sm text-brand-text/50 mt-0.5">AI platform for GitHub commit and PR summaries</p>
               </div>
@@ -198,9 +213,10 @@ const sortedWriting = writingEntries.sort((a, b) => b.data.date.valueOf() - a.da
           <details class="exp-card group border-t border-b border-dashed border-brand-text/10">
             <summary class="flex items-start justify-between py-5 cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden">
               <div class="flex-1 min-w-0">
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-3">
                   <h3 class="text-base font-semibold text-brand-text/95">PINN for Structural Mechanics</h3>
                   <svg class="exp-dropdown-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                  <a href="https://github.com/arre-ankit/Physics-Informed-Neural-Networks-PINNs-" target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono text-brand-text/40 hover:text-brand-accent2 transition-colors" aria-label="View PINN for Structural Mechanics on GitHub">GitHub</a>
                 </div>
                 <p class="text-sm text-brand-text/50 mt-0.5">Under Prof. Kshitij Kumar Yadav, IIT BHU</p>
               </div>
@@ -223,21 +239,6 @@ const sortedWriting = writingEntries.sort((a, b) => b.data.date.valueOf() - a.da
             </div>
           </details>
         </div>
-      </section>
-
-      <!-- ═══ WRITING ═══ -->
-      <section>
-        <h2 class="text-xl font-semibold mb-6 flex items-center gap-2">
-          <span class="w-1 h-6 bg-brand-accent4"></span>
-          Writing
-        </h2>
-        <ul class="space-y-2 pl-4 border-l border-dashed border-brand-text/20">
-          {sortedWriting.map((entry) => (
-            <li>
-              <a href={`/writing/${entry.slug}`} class="underline underline-offset-4 decoration-brand-text/40 hover:decoration-brand-text transition-colors text-[15px]">{entry.data.title}</a>
-            </li>
-          ))}
-        </ul>
       </section>
     </div>
 
