@@ -368,17 +368,17 @@ const sortedWriting = writingEntries.sort((a, b) => b.data.date.valueOf() - a.da
 <style>
   .exp-dropdown-icon {
     flex-shrink: 0;
-    color: rgba(31, 31, 31, 0.4);
+    color: color-mix(in srgb, var(--text-primary) 40%, transparent);
     transition: transform 0.2s ease, color 0.2s ease;
   }
 
   details.exp-card[open] .exp-dropdown-icon {
     transform: rotate(180deg);
-    color: rgba(31, 31, 31, 0.7);
+    color: color-mix(in srgb, var(--text-primary) 70%, transparent);
   }
 
   details.exp-card summary:hover .exp-dropdown-icon {
-    color: rgba(31, 31, 31, 0.7);
+    color: color-mix(in srgb, var(--text-primary) 70%, transparent);
   }
 
   details.exp-card[open] > div {
