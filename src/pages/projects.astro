@@ -3,51 +3,88 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 const projects = [
   {
-    slug: 'example-project-1',
-    name: 'Example Project 1',
-    description: 'A brief description of what this project does and why it matters.',
-    link: 'https://github.com/yourusername/project1',
-    demo: 'https://project1.demo.com',
-    tags: ['TypeScript', 'React', 'Tailwind'],
+    slug: 'termreel',
+    name: 'termreel',
+    description: 'Describe your terminal demo in plain English, termreel uses AI to generate a VHS tape file, records it into GIF/MP4/WebM, and lets you refine it in a loop. The gap between "I built this" and "let me show you", closed.',
+    link: 'https://github.com/arre-ankit/termreel',
+    demo: null,
+    tags: ['TypeScript', 'CLI', 'AI', 'VHS'],
+    status: 'Active',
+    year: '2026',
+    mediaUrl: 'https://raw.githubusercontent.com/arre-ankit/termreel/refs/heads/main/.github/termreel-demo.gif',
+  },
+  {
+    slug: 'repochart',
+    name: 'repochart',
+    description: 'GitHub repository analytics, right from your terminal. Star growth curves, commit velocity, contributor rankings, language breakdowns, all rendered as sparklines and bar charts. Compare two repos side-by-side and see who\'s actually shipping.',
+    link: 'https://github.com/arre-ankit/repochart',
+    demo: null,
+    tags: ['TypeScript', 'CLI', 'GitHub API'],
+    status: 'Active',
+    year: '2026',
+    mediaUrl: 'https://raw.githubusercontent.com/arre-ankit/repochart/refs/heads/main/.github/repochart-compare-demo.gif',
+  },
+  {
+    slug: 'zombiefiles',
+    name: 'zombiefiles',
+    description: 'Every codebase accumulates dead weight, files nobody has touched in months, quietly rotting in the repo. zombiefiles scans your git history and surfaces them, sorted by staleness. The Marie Kondo of codebases.',
+    link: 'https://github.com/arre-ankit/zombiefiles',
+    demo: null,
+    tags: ['TypeScript', 'CLI', 'Git'],
+    status: 'Active',
+    year: '2026',
+    mediaUrl: 'https://raw.githubusercontent.com/arre-ankit/zombiefiles/refs/heads/main/.github/zombiefiles-demo.gif',
+  },
+  {
+    slug: 'pullscan',
+    name: 'PullScan',
+    description: 'AI-powered Pull Request and Commit Summarizer with RAG-based chat. Reading through pull requests scales terribly, PullScan generates comprehensive summaries and lets you ask questions about the codebase. Like having a senior engineer who already read every PR.',
+    link: 'https://github.com/arre-ankit/PullScan',
+    demo: null,
+    tags: ['TypeScript', 'Next.js', 'LangBase', 'AI'],
+    status: 'Active',
+    year: '2025',
+    mediaUrl: 'https://github.com/user-attachments/assets/29776e3c-f428-41ca-aa67-d723333b2f0d',
+  },
+  {
+    slug: 'spotify-popularity-game',
+    name: 'Spotify Popularity Game',
+    description: 'Two songs appear, you guess which one is more popular on Spotify. Sounds easy until you realize your music taste is a terrible predictor of mainstream popularity. A fun way to discover how disconnected your bubble really is.',
+    link: 'https://github.com/arre-ankit/spotify-popularity-game',
+    demo: 'https://main.higher-lower-spotify-game.pages.dev',
+    tags: ['TypeScript', 'Next.js', 'Spotify API'],
     status: 'Active',
     year: '2024',
+    mediaUrl: 'https://github.com/user-attachments/assets/b3238e06-0fec-4f4f-9b03-f9b84fac71e3',
   },
   {
-    slug: 'example-project-2',
-    name: 'Example Project 2',
-    description: 'Another interesting project that showcases your skills and interests.',
-    link: 'https://github.com/yourusername/project2',
-    demo: 'https://project2.demo.com',
-    tags: ['Python', 'FastAPI', 'PostgreSQL'],
+    slug: 'speechsync-ai',
+    name: 'SpeechSync AI',
+    description: 'The bottleneck for many international developers isn\'t coding skill, it\'s pronunciation. SpeechSync records your speech, runs it through Whisper ASR, then uses GPT-3.5 for detailed pronunciation feedback. A personal accent coach in your browser.',
+    link: 'https://github.com/arre-ankit/speechsync-ai',
+    demo: 'https://speechsync-ai.pages.dev',
+    tags: ['TypeScript', 'Next.js', 'Whisper', 'Cloudflare AI'],
     status: 'Active',
-    year: '2023',
-  },
-  {
-    slug: 'example-project-3',
-    name: 'Example Project 3',
-    description: 'A third project demonstrating your range and expertise.',
-    link: 'https://github.com/yourusername/project3',
-    demo: null,
-    tags: ['Astro', 'MDX', 'Design'],
-    status: 'Archived',
-    year: '2023',
+    year: '2024',
+    mediaUrl: 'https://github.com/user-attachments/assets/e1ccd982-c6b4-4d89-85fd-0c80b5034bba',
   },
 ];
+
+const totalStars = 14;
 ---
 
 <BaseLayout title="Projects" description="Things I've built">
   <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
-    <!-- Main Content - Centered Projects -->
     <div class="md:col-span-8 space-y-8 border-brand-text/10 px-8 pb-12 pt-0">
       <div class="space-y-2">
         <h1 class="text-4xl font-semibold text-brand-text tracking-tight">Projects</h1>
-        <p class="text-brand-text/70">Things I've built</p>
+        <p class="text-brand-text/70">CLI tools, AI experiments, and things that scratched an itch</p>
       </div>
 
-      <div class="space-y-4">
+      <div class="space-y-0">
         {projects.map((project) => (
-          <article class="pb-4 border-b border-dashed border-brand-text/10 last:border-b-0 hover:bg-brand-text/[0.01] transition-all p-3 -mx-3">
-            <div class="flex items-start gap-3 mb-2">
+          <article class="group pb-6 pt-6 border-b border-dashed border-brand-text/10 last:border-b-0 hover:bg-brand-text/[0.01] transition-all p-3 -mx-3">
+            <div class="flex items-start gap-3 mb-3">
               <div class="flex-1">
                 <div class="flex items-center gap-3 mb-1.5">
                   <a href={`/projects/${project.slug}`} class="hover:text-brand-accent2 transition-colors">
@@ -55,6 +92,7 @@ const projects = [
                       {project.name}
                     </h2>
                   </a>
+                  <span class="text-xs font-mono text-brand-text/40">{project.year}</span>
                   <a
                     href={project.link}
                     target="_blank"
@@ -80,9 +118,26 @@ const projects = [
                     </a>
                   )}
                 </div>
-                <p class="text-brand-text/80 text-sm leading-relaxed mb-2">
+                <p class="text-brand-text/80 text-sm leading-relaxed mb-3">
                   {project.description}
                 </p>
+
+                {project.mediaUrl && (
+                  <a href={`/projects/${project.slug}`} class="block mb-3 relative group/media overflow-hidden border border-dashed border-brand-text/10 hover:border-brand-text/20 transition-all">
+                    <img
+                      src={project.mediaUrl}
+                      alt={`${project.name} demo`}
+                      class="w-full h-auto object-contain bg-black/50"
+                      loading="lazy"
+                    />
+                    <div class="absolute inset-0 bg-brand-primary/0 group-hover/media:bg-brand-primary/10 transition-all flex items-center justify-center">
+                      <span class="opacity-0 group-hover/media:opacity-100 transition-opacity text-xs font-mono text-brand-text/80 px-3 py-1.5 border border-dashed border-brand-text/30 bg-brand-primary/80 backdrop-blur-sm">
+                        View Project
+                      </span>
+                    </div>
+                  </a>
+                )}
+
                 <div class="flex flex-wrap items-center gap-2">
                   <div class="flex flex-wrap gap-2">
                     {project.tags.map((tag) => (
@@ -99,66 +154,63 @@ const projects = [
       </div>
     </div>
 
-    <!-- Creative Sidebar for Projects -->
     <div class="md:col-span-4 space-y-0 pt-0">
-      <!-- Tech Stack Card -->
       <div class="relative border-t border-l border-r border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
         <div class="absolute top-0 left-0 w-3 h-3 border-l-2 border-t-2 border-brand-accent3"></div>
 
-        <div class="flex items-center gap-2 mb-4">
-          <span class="text-2xl">🛠️</span>
-          <h3 class="text-xs font-semibold text-brand-text/60 tracking-widest uppercase">Tech Stack</h3>
-        </div>
+        <h3 class="text-xs font-semibold text-brand-text/60 mb-4 tracking-widest uppercase flex items-center gap-2">
+          <span class="w-1.5 h-1.5 bg-brand-accent3 rotate-45"></span>
+          Tech Stack
+        </h3>
 
         <div class="grid grid-cols-3 gap-3">
           <div class="aspect-square border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.02] hover:border-brand-accent2 transition-all flex flex-col items-center justify-center p-3 group">
-            <span class="text-2xl group-hover:scale-110 transition-transform">📘</span>
+            <span class="text-lg font-mono font-bold text-brand-accent2 group-hover:scale-110 transition-transform">TS</span>
             <p class="text-[10px] text-brand-text/60 text-center leading-tight mt-1">TypeScript</p>
           </div>
 
           <div class="aspect-square border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.02] hover:border-brand-accent2 transition-all flex flex-col items-center justify-center p-3 group">
-            <span class="text-2xl group-hover:scale-110 transition-transform">⚛️</span>
-            <p class="text-[10px] text-brand-text/60 text-center leading-tight mt-1">React</p>
+            <span class="text-lg font-mono font-bold text-brand-accent5 group-hover:scale-110 transition-transform">N</span>
+            <p class="text-[10px] text-brand-text/60 text-center leading-tight mt-1">Next.js</p>
           </div>
 
           <div class="aspect-square border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.02] hover:border-brand-accent2 transition-all flex flex-col items-center justify-center p-3 group">
-            <span class="text-2xl group-hover:scale-110 transition-transform">🎨</span>
+            <span class="text-lg font-mono font-bold text-brand-accent4 group-hover:scale-110 transition-transform">AI</span>
+            <p class="text-[10px] text-brand-text/60 text-center leading-tight mt-1">Claude/GPT</p>
+          </div>
+
+          <div class="aspect-square border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.02] hover:border-brand-accent2 transition-all flex flex-col items-center justify-center p-3 group">
+            <span class="text-lg font-mono font-bold text-brand-accent6 group-hover:scale-110 transition-transform">CF</span>
+            <p class="text-[10px] text-brand-text/60 text-center leading-tight mt-1">Cloudflare</p>
+          </div>
+
+          <div class="aspect-square border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.02] hover:border-brand-accent2 transition-all flex flex-col items-center justify-center p-3 group">
+            <span class="text-lg font-mono font-bold text-brand-accent3 group-hover:scale-110 transition-transform">&gt;_</span>
+            <p class="text-[10px] text-brand-text/60 text-center leading-tight mt-1">CLI</p>
+          </div>
+
+          <div class="aspect-square border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.02] hover:border-brand-accent2 transition-all flex flex-col items-center justify-center p-3 group">
+            <span class="text-lg font-mono font-bold text-brand-accent1 group-hover:scale-110 transition-transform">GH</span>
+            <p class="text-[10px] text-brand-text/60 text-center leading-tight mt-1">GitHub API</p>
+          </div>
+
+          <div class="aspect-square border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.02] hover:border-brand-accent2 transition-all flex flex-col items-center justify-center p-3 group">
+            <span class="text-lg font-mono font-bold text-brand-accent7 group-hover:scale-110 transition-transform">LB</span>
+            <p class="text-[10px] text-brand-text/60 text-center leading-tight mt-1">LangBase</p>
+          </div>
+
+          <div class="aspect-square border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.02] hover:border-brand-accent2 transition-all flex flex-col items-center justify-center p-3 group">
+            <span class="text-lg font-mono font-bold text-brand-text/60 group-hover:scale-110 transition-transform">TW</span>
             <p class="text-[10px] text-brand-text/60 text-center leading-tight mt-1">Tailwind</p>
           </div>
 
           <div class="aspect-square border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.02] hover:border-brand-accent2 transition-all flex flex-col items-center justify-center p-3 group">
-            <span class="text-2xl group-hover:scale-110 transition-transform">🐍</span>
-            <p class="text-[10px] text-brand-text/60 text-center leading-tight mt-1">Python</p>
-          </div>
-
-          <div class="aspect-square border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.02] hover:border-brand-accent2 transition-all flex flex-col items-center justify-center p-3 group">
-            <span class="text-2xl group-hover:scale-110 transition-transform">⚡</span>
-            <p class="text-[10px] text-brand-text/60 text-center leading-tight mt-1">FastAPI</p>
-          </div>
-
-          <div class="aspect-square border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.02] hover:border-brand-accent2 transition-all flex flex-col items-center justify-center p-3 group">
-            <span class="text-2xl group-hover:scale-110 transition-transform">🐘</span>
-            <p class="text-[10px] text-brand-text/60 text-center leading-tight mt-1">PostgreSQL</p>
-          </div>
-
-          <div class="aspect-square border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.02] hover:border-brand-accent2 transition-all flex flex-col items-center justify-center p-3 group">
-            <span class="text-2xl group-hover:scale-110 transition-transform">🚀</span>
-            <p class="text-[10px] text-brand-text/60 text-center leading-tight mt-1">Astro</p>
-          </div>
-
-          <div class="aspect-square border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.02] hover:border-brand-accent2 transition-all flex flex-col items-center justify-center p-3 group">
-            <span class="text-2xl group-hover:scale-110 transition-transform">📝</span>
-            <p class="text-[10px] text-brand-text/60 text-center leading-tight mt-1">MDX</p>
-          </div>
-
-          <div class="aspect-square border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.02] hover:border-brand-accent2 transition-all flex flex-col items-center justify-center p-3 group">
-            <span class="text-2xl group-hover:scale-110 transition-transform">✨</span>
-            <p class="text-[10px] text-brand-text/60 text-center leading-tight mt-1">Design</p>
+            <span class="text-lg font-mono font-bold text-brand-accent9 group-hover:scale-110 transition-transform">VHS</span>
+            <p class="text-[10px] text-brand-text/60 text-center leading-tight mt-1">Charmbracelet</p>
           </div>
         </div>
       </div>
 
-      <!-- Project Stats -->
       <div class="relative border-t border-l border-r border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
         <h3 class="text-xs font-semibold text-brand-text/60 mb-4 tracking-widest uppercase flex items-center gap-2">
           <span class="w-1.5 h-1.5 bg-brand-accent2 rotate-45"></span>
@@ -172,13 +224,22 @@ const projects = [
           </div>
 
           <div class="text-center p-3 border border-dashed border-brand-text/10 bg-brand-text/[0.01]">
-            <p class="text-2xl font-semibold text-brand-text mb-1">{projects.filter(p => p.status === 'Active').length}</p>
-            <p class="text-xs text-brand-text/60">Active</p>
+            <p class="text-2xl font-semibold text-brand-text mb-1">{totalStars}</p>
+            <p class="text-xs text-brand-text/60">Stars</p>
+          </div>
+
+          <div class="text-center p-3 border border-dashed border-brand-text/10 bg-brand-text/[0.01]">
+            <p class="text-2xl font-semibold text-brand-text mb-1">3</p>
+            <p class="text-xs text-brand-text/60">CLI Tools</p>
+          </div>
+
+          <div class="text-center p-3 border border-dashed border-brand-text/10 bg-brand-text/[0.01]">
+            <p class="text-2xl font-semibold text-brand-text mb-1">100%</p>
+            <p class="text-xs text-brand-text/60">Open Source</p>
           </div>
         </div>
       </div>
 
-      <!-- Open Source Contribution -->
       <div class="relative border-t border-l border-r border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
         <h3 class="text-xs font-semibold text-brand-text/60 mb-4 tracking-widest uppercase flex items-center gap-2">
           <span class="w-1.5 h-1.5 bg-brand-accent4 rotate-45"></span>
@@ -187,10 +248,10 @@ const projects = [
 
         <div class="space-y-3">
           <p class="text-sm text-brand-text/70 leading-relaxed">
-            I believe in open source and try to contribute back to the community whenever possible.
+            Everything I build is open source. I believe the best way to learn is to build in public and let others learn from your code, and your mistakes.
           </p>
 
-          <a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm font-medium text-brand-text hover:text-brand-accent4 transition-colors border-b border-dashed border-brand-text/20 hover:border-brand-accent4 pb-0.5">
+          <a href="https://github.com/arre-ankit" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm font-medium text-brand-text hover:text-brand-accent4 transition-colors border-b border-dashed border-brand-text/20 hover:border-brand-accent4 pb-0.5">
             View GitHub
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
@@ -199,7 +260,6 @@ const projects = [
         </div>
       </div>
 
-      <!-- Featured Project -->
       <div class="relative border-t border-l border-r border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
         <h3 class="text-xs font-semibold text-brand-text/60 mb-4 tracking-widest uppercase flex items-center gap-2">
           <span class="w-1.5 h-1.5 bg-brand-accent5 rotate-45"></span>
@@ -207,28 +267,27 @@ const projects = [
         </h3>
 
         <div class="pl-4 border-l-2 border-dashed border-brand-accent5/30">
-          <p class="text-sm text-brand-text/80 font-medium mb-1">{projects[0].name}</p>
+          <p class="text-sm text-brand-text/80 font-medium mb-1">termreel</p>
           <p class="text-xs text-brand-text/60 leading-relaxed mb-2">
-            Currently my most active project
+            AI-powered terminal demo recorder. Plain English in, polished GIF out.
           </p>
-          <a href={`/projects/${projects[0].slug}`} class="text-xs text-brand-accent5 hover:underline">
-            Learn more →
+          <a href="/projects/termreel" class="text-xs text-brand-accent5 hover:underline">
+            Learn more &rarr;
           </a>
         </div>
       </div>
 
-      <!-- Collaboration CTA -->
       <div class="relative border border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01] group hover:bg-brand-text/[0.03] transition-all">
         <div class="absolute bottom-0 right-0 w-3 h-3 border-r-2 border-b-2 border-brand-accent3"></div>
 
         <h3 class="text-xs font-semibold text-brand-text/60 mb-3 tracking-widest uppercase">Collaborate</h3>
 
         <p class="text-sm text-brand-text/70 leading-relaxed mb-4">
-          Interested in working together? Let's build something great.
+          Interested in working together? I'm always open to building something interesting.
         </p>
 
-        <a href="mailto:collaborate@example.com" class="inline-flex items-center gap-2 text-sm font-medium text-brand-text hover:text-brand-accent3 transition-colors border-b border-dashed border-brand-text/20 hover:border-brand-accent3 pb-0.5">
-          Get in touch
+        <a href="https://x.com/arre_ankit" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm font-medium text-brand-text hover:text-brand-accent3 transition-colors border-b border-dashed border-brand-text/20 hover:border-brand-accent3 pb-0.5">
+          Reach out on X
           <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
           </svg>

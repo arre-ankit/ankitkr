@@ -2,87 +2,203 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import VideoPlayer from '../../components/VideoPlayer.astro';
 
-// For SSR mode: handle route dynamically
 const slug = Astro.params.slug;
 
-// Define all projects
 const projects = [
   {
-    slug: 'example-project-1',
-    name: 'Example Project 1',
-    description: 'A comprehensive description of what this project does and why it matters. This project demonstrates advanced web development techniques using modern frameworks and best practices.',
-    link: 'https://github.com/arre-ankit/project1',
-    demo: 'https://project1.demo.com',
-    videoUrl: 'https://www.youtube.com/watch?v=9PoGWIK9DmE',
-    tags: ['TypeScript', 'React', 'Tailwind'],
+    slug: 'termreel',
+    name: 'termreel',
+    description: `There's a fundamental asymmetry in developer tooling: building something cool in the terminal is easy, but showing it to someone else is surprisingly hard. You can't just screenshot a terminal, the magic is in the motion, the typing, the output streaming in. Screen recordings are clunky, require manual setup, and the result is usually a 40MB MP4 that looks terrible on GitHub.
+
+termreel closes this gap. You describe what you want to demo in plain English, "show me installing the package, running the help command, then executing a query", and AI generates a VHS tape file that scripts the entire recording. VHS (by Charmbracelet) is the actual recording engine; termreel wraps it with an AI layer that handles the tedious part: writing the tape syntax, picking themes, naming files.
+
+The key insight is the refinement loop. The first AI-generated tape is rarely perfect, maybe the typing speed is wrong, or it's missing a pause before the output. So termreel drops you into an iterative cycle: describe what to change, AI updates the tape, re-records, repeat. If VHS fails to render (which happens), termreel automatically sends the error back to the AI for self-repair, up to 3 attempts. It's the kind of tight feedback loop that makes the difference between "neat prototype" and "tool I actually use."
+
+The architecture is intentionally simple: TypeScript, Commander.js for the CLI, and a clean abstraction over Anthropic/OpenAI APIs. No framework overhead, no build complexity. Just a tool that does one thing well.`,
+    link: 'https://github.com/arre-ankit/termreel',
+    demo: null,
+    videoUrl: 'https://raw.githubusercontent.com/arre-ankit/termreel/refs/heads/main/.github/termreel-demo.gif',
+    tags: ['TypeScript', 'CLI', 'AI', 'VHS'],
+    status: 'Active',
+    year: '2026',
+    features: [
+      'Plain English to terminal demo, describe what you want, AI generates the VHS tape file',
+      'Multi-format output, GIF, MP4, and WebM from a single recording session',
+      'AI refinement loop, iteratively tweak the demo by describing changes in natural language',
+      'Auto-error recovery, if VHS fails to render, the error is fed back to AI for self-repair (up to 3 attempts)',
+      '200+ built-in themes with live color previews and fuzzy search',
+      'Dual AI provider support, Anthropic (Claude) and OpenAI (GPT) with persistent config',
+      'Concurrent filename generation, AI names your file while you pick output options',
+    ],
+    challenges: 'The hardest part was making the AI generate syntactically valid VHS tape files consistently. VHS has a specific DSL with commands like Type, Sleep, Enter, and Set, and LLMs love to hallucinate syntax. The solution was a combination of few-shot prompting with real tape examples, a theme placeholder system (so the AI never tries to generate theme values), and the auto-repair loop that catches rendering failures and feeds them back for correction.',
+    learnings: 'Building termreel taught me that the best developer tools are the ones that eliminate friction in workflows people didn\'t realize were painful. Nobody wakes up thinking "I need a better terminal recorder", but once you\'ve used termreel, going back to manual screen recording feels like writing assembly. The AI refinement loop pattern (generate → test → describe fix → regenerate) is broadly applicable and something I\'ll use in future tools.',
+  },
+  {
+    slug: 'repochart',
+    name: 'repochart',
+    description: `GitHub's web UI gives you a star count and a language bar. That's the extent of the analytics you get for any repository. If you want to understand the trajectory of a project, is it accelerating or stalling? Who's actually doing the work? How does it compare to alternatives?, you're left clicking through tabs and doing mental math.
+
+repochart brings real analytics to the terminal. Run \`npx repochart vercel/next.js --overview\` and you get four charts in one shot: cumulative star growth as a sparkline, weekly commit activity for the last 52 weeks, top 15 contributors ranked by commits, and a language breakdown with proportional bar charts. All rendered with Unicode box-drawing characters, so it looks clean in any terminal.
+
+The compare mode is where it gets interesting. \`repochart compare vercel/next.js facebook/react\` fetches all stats for both repos in parallel and renders them side-by-side, split by a divider. The winner in total stars and commits gets highlighted in green. It's the kind of view that should exist on GitHub but doesn't.
+
+Under the hood, repochart uses the GitHub CLI (\`gh\`) for all API calls, no tokens to manage, no OAuth dance. Just \`gh auth login\` once and you're set. The parallel fetching is important: hitting 4 different GitHub API endpoints sequentially would be painfully slow, so everything fires concurrently and renders as results come in.`,
+    link: 'https://github.com/arre-ankit/repochart',
+    demo: null,
+    videoUrl: 'https://raw.githubusercontent.com/arre-ankit/repochart/refs/heads/main/.github/repochart-compare-demo.gif',
+    tags: ['TypeScript', 'CLI', 'GitHub API'],
+    status: 'Active',
+    year: '2026',
+    features: [
+      'Star growth sparklines, cumulative star history rendered as a Unicode sparkline chart',
+      'Commit velocity, weekly commit activity for the last 52 weeks with peak/average stats',
+      'Contributor rankings, top 15 contributors with proportional bar charts',
+      'Language breakdown, percentage-based bar charts for all detected languages',
+      'Side-by-side repo comparison, compare any two repos with parallel data fetching',
+      'Overview mode, all four chart types in a single command',
+      'Zero token management, piggybacks on GitHub CLI authentication (5,000 req/hour)',
+    ],
+    challenges: 'The main challenge was rendering rich, proportional charts in a fixed-width terminal. Unicode sparkline characters (▁▂▃▄▅▆▇█) give you 8 levels of granularity, which means you need to bucket continuous data into 8 bins intelligently. For the side-by-side comparison, the terminal width constraint means dynamically calculating column widths and truncating labels without losing readability. Getting this right across different terminal emulators was trickier than expected.',
+    learnings: 'Building repochart reinforced something I keep rediscovering: the terminal is an underrated UI platform. With Unicode box-drawing characters, ANSI colors, and careful layout math, you can build surprisingly rich visualizations without any GUI framework. The constraint of fixed-width characters actually forces better information design, every character has to earn its place.',
+  },
+  {
+    slug: 'zombiefiles',
+    name: 'zombiefiles',
+    description: `Every codebase has them: files that nobody has touched in months, quietly accumulating in the repository like sediment. That authentication helper from the old API. The utility function someone wrote for a migration that finished six months ago. The config file for a service you decommissioned. They're not hurting anything, until they are. Someone new joins the team, sees \`auth-old.js\`, and spends an hour trying to understand if it's still used.
+
+zombiefiles is a dead-simple CLI that scans your git history and finds these forgotten files. It lists every git-tracked file via \`git ls-files\`, checks the last commit date for each one via \`git log\`, filters by a staleness threshold (default: 3 months), and sorts the results oldest-first. That's it. No configuration files, no plugins, no daemon process.
+
+The output is deliberately minimal: filename, how long it's been untouched. Run \`npx zombiefiles\` in any git repo and you immediately see the dead weight. Adjust the threshold with \`--months 6\` if 3 months is too aggressive for your codebase.
+
+The philosophy here is that the best developer tools are the ones with the smallest API surface. zombiefiles does one thing, finds stale files, and does it in a single command with zero setup. If you need more sophisticated dead code detection, use a proper static analysis tool. But for the 80% case of "what files has nobody touched in forever," this is all you need.`,
+    link: 'https://github.com/arre-ankit/zombiefiles',
+    demo: null,
+    videoUrl: 'https://raw.githubusercontent.com/arre-ankit/zombiefiles/refs/heads/main/.github/zombiefiles-demo.gif',
+    tags: ['TypeScript', 'CLI', 'Git'],
+    status: 'Active',
+    year: '2026',
+    features: [
+      'Zero-config scanning, run npx zombiefiles in any git repo, no setup required',
+      'Git-native detection, uses git ls-files and git log, so it respects .gitignore automatically',
+      'Configurable staleness threshold, default 3 months, adjustable with --months flag',
+      'Sorted by staleness, oldest zombies surface first, so you see the worst offenders immediately',
+      'Cross-repo scanning, point it at any directory with --dir flag',
+    ],
+    challenges: 'The main engineering challenge was performance. Running `git log` for every single file in a large repo is O(n) git operations, which can be slow for repos with thousands of files. The solution was to batch the git log calls and parallelize where possible, but there\'s a fundamental tradeoff between accuracy (checking each file individually) and speed (bulk operations that might miss edge cases). For most repos under 10k files, the current approach is fast enough.',
+    learnings: 'zombiefiles is a case study in the value of constraint. The entire tool is under 200 lines of TypeScript. No dependencies beyond Commander.js for argument parsing. No config files. No plugins. The temptation to add features, "what if it could also detect unused exports?" "what if it integrated with your CI?", is real, but resisting it is what keeps the tool useful. The best CLI tools are the ones you can explain in one sentence.',
+  },
+  {
+    slug: 'pullscan',
+    name: 'PullScan',
+    description: `Reading pull requests is one of those tasks that scales terribly with team size. When you're a team of 3, you can read every PR. At 10 people, you're skimming. At 50, you've given up and just approve things that look reasonable. The information is all there in the diff, but extracting the intent, the tradeoffs, the "why" behind the changes requires reading every file, understanding the context, and holding the whole thing in your head.
+
+PullScan attacks this problem with AI. Point it at any GitHub repository and it generates comprehensive summaries of pull requests and individual commits. But the real power is the RAG-powered chat: it indexes the codebase and lets you ask questions like "what changed in the authentication module this week?" or "why was this function refactored?" and get context-aware answers grounded in the actual code.
+
+The architecture is a Next.js 15 frontend with a backend powered by LangBase for the AI orchestration and UpStash for caching. LangBase handles the RAG pipeline, chunking the codebase, embedding it, and retrieving relevant context for each query. Google AI Studio provides the language model. The separation of concerns here matters: the frontend is just a thin UI layer, all the intelligence lives in the backend services.
+
+This is the kind of tool that gets more valuable as the codebase grows. For a small project, you can just read the PRs. But for a large, active repository with dozens of contributors, having an AI that can synthesize changes across multiple PRs and explain them in plain English is genuinely useful.`,
+    link: 'https://github.com/arre-ankit/PullScan',
+    demo: null,
+    videoUrl: 'https://github.com/user-attachments/assets/29776e3c-f428-41ca-aa67-d723333b2f0d',
+    tags: ['TypeScript', 'Next.js', 'LangBase', 'AI', 'RAG'],
+    status: 'Active',
+    year: '2025',
+    features: [
+      'AI-powered PR summaries, comprehensive breakdowns of pull request changes without reading every line',
+      'Commit-level summaries, understand individual commits with concise, AI-generated explanations',
+      'RAG-powered codebase chat, ask questions about the code and get context-aware answers grounded in the actual repository',
+      'LangBase integration, production-grade RAG pipeline for chunking, embedding, and retrieval',
+      'Caching with UpStash, fast responses for repeated queries without redundant API calls',
+    ],
+    challenges: 'The hardest problem in building PullScan was getting the RAG pipeline right. Naive chunking of source code produces terrible results, you end up with chunks that split functions in half or separate a class from its methods. The solution was to use AST-aware chunking that respects code boundaries, combined with metadata enrichment (file path, function name, class context) so the retrieval step can find semantically relevant code even when the query uses different terminology than the source.',
+    learnings: 'PullScan taught me that the gap between "AI demo" and "AI tool people actually use" is mostly about retrieval quality. The language model is the easy part, it\'s good at summarizing once you give it the right context. The hard part is finding the right context in a large codebase. RAG is not just "embed and retrieve", it\'s a whole pipeline of chunking strategies, metadata enrichment, re-ranking, and context window management that determines whether the output is useful or hallucinated.',
+  },
+  {
+    slug: 'spotify-popularity-game',
+    name: 'Spotify Popularity Game',
+    description: `Here's a fun experiment in calibration: take two songs, show their album covers side by side, and ask "which one is more popular on Spotify?" It sounds trivially easy, until you play it and realize your intuitions about music popularity are wildly miscalibrated.
+
+The game is simple by design. Two album covers appear. You pick the one you think has a higher popularity score on Spotify (a 0-100 metric based on recent play count and velocity). If you're right, you score a point and get a new pair. If you're wrong, game over. Your high score is a direct measure of how well-calibrated your sense of mainstream music taste is.
+
+What makes this interesting from a design perspective is the tension between what you think is popular (based on your social circle, your playlists, your algorithmic bubble) and what's actually popular globally. A track that dominates your Discover Weekly might have a popularity score of 45. A song you've never heard of might be at 92. The game makes this gap visceral in a way that just looking at numbers doesn't.
+
+Built with Next.js 14 and deployed on Cloudflare Pages. The Spotify Web API provides the track data, popularity scores, album art, artist info. The game state is entirely client-side, no backend needed beyond the initial API calls.`,
+    link: 'https://github.com/arre-ankit/spotify-popularity-game',
+    demo: 'https://main.higher-lower-spotify-game.pages.dev',
+    videoUrl: 'https://github.com/user-attachments/assets/b3238e06-0fec-4f4f-9b03-f9b84fac71e3',
+    tags: ['TypeScript', 'Next.js', 'Spotify API', 'Cloudflare Pages'],
     status: 'Active',
     year: '2024',
     features: [
-      'Responsive design with Tailwind CSS',
-      'Type-safe development with TypeScript',
-      'Modern React patterns and hooks',
-      'Optimized performance',
+      'Higher/Lower gameplay, guess which of two songs has a higher Spotify popularity score',
+      'Real-time Spotify data, popularity scores pulled directly from the Spotify Web API',
+      'Album art display, visual comparison using actual album covers',
+      'Score tracking, see how well-calibrated your music taste intuitions really are',
+      'Instant feedback, correct/incorrect with the actual popularity numbers revealed',
+      'Zero backend, game state is entirely client-side, deployed as a static site on Cloudflare Pages',
     ],
-    challenges: 'Building a scalable architecture that could handle complex state management while maintaining performance.',
-    learnings: 'Deepened understanding of React performance optimization and TypeScript best practices.',
+    challenges: 'The main challenge was curating the song pool. If you only use top-100 songs, the game is too easy, everyone knows Drake is popular. If you include obscure tracks, it becomes random guessing. The sweet spot is a mix: some mainstream hits, some genre-specific popular tracks, some viral TikTok songs, and some critically acclaimed but niche artists. Getting this balance right required iterating on the song selection algorithm and testing with real players.',
+    learnings: 'This project reinforced something I find fascinating: humans are terrible at estimating popularity outside their own bubble. We dramatically overestimate the popularity of things we personally like and underestimate things we\'ve never encountered. The Spotify popularity score is a clean, quantitative measure of this bias. Building the game was straightforward, the interesting part was watching people play it and seeing their calibration improve over time.',
   },
   {
-    slug: 'example-project-2',
-    name: 'Example Project 2',
-    description: 'Another interesting project that showcases your skills and interests. Built with Python and FastAPI, this backend service handles complex data processing.',
-    link: 'https://github.com/yourusername/project2',
-    demo: 'https://project2.demo.com',
-    videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    tags: ['Python', 'FastAPI', 'PostgreSQL'],
+    slug: 'speechsync-ai',
+    name: 'SpeechSync AI',
+    description: `For many international developers, the bottleneck to landing a remote job isn't technical skill, it's pronunciation. You can write flawless code, ace the system design interview, and still get passed over because the hiring manager couldn't understand you on the video call. Traditional language learning apps focus on vocabulary and grammar, which is the wrong abstraction. The problem is phonetic: specific sounds, stress patterns, and intonation that differ between your native language and English.
+
+SpeechSync.ai is a focused tool for this specific problem. Record yourself speaking, and the system runs your audio through Whisper ASR (OpenAI's speech recognition model, running on Cloudflare AI) to get a transcription. Then GPT-3.5 analyzes the transcription against the target text and generates detailed pronunciation feedback: which words were mispronounced, what the correct phonetic pattern should be, and specific exercises to improve.
+
+The architecture is deliberately split: a Next.js 14 frontend handles the recording UI (using React Media Recorder for browser-based audio capture), and a Cloudflare Worker backend handles the AI pipeline. This split matters because the AI inference is compute-heavy and benefits from edge deployment, Cloudflare Workers run close to the user, which reduces latency for the audio upload and transcription step.
+
+The key design decision was using Whisper on Cloudflare AI rather than a third-party transcription API. Cloudflare AI gives you Whisper inference at the edge with no cold starts, which means the transcription step is fast enough to feel real-time. The GPT-3.5 analysis adds a few seconds, but the overall loop, speak, wait, read feedback, is tight enough to be useful for iterative practice.`,
+    link: 'https://github.com/arre-ankit/speechsync-ai',
+    demo: 'https://speechsync-ai.pages.dev',
+    videoUrl: 'https://github.com/user-attachments/assets/e1ccd982-c6b4-4d89-85fd-0c80b5034bba',
+    tags: ['TypeScript', 'Next.js', 'Whisper ASR', 'Cloudflare AI', 'GPT-3.5'],
     status: 'Active',
-    year: '2023',
+    year: '2024',
     features: [
-      'RESTful API with FastAPI',
-      'PostgreSQL database integration',
-      'Async request handling',
-      'Comprehensive API documentation',
+      'Real-time speech recording, browser-based audio capture with React Media Recorder',
+      'Whisper ASR transcription, OpenAI\'s speech recognition model running on Cloudflare AI at the edge',
+      'AI pronunciation analysis, GPT-3.5 generates detailed feedback on mispronounced words and phonetic patterns',
+      'Personalized improvement recommendations, specific exercises tailored to your pronunciation patterns',
+      'Edge-deployed inference, Cloudflare Workers minimize latency for audio upload and transcription',
+      'No account required, just open the browser and start practicing',
     ],
-    challenges: 'Designing an efficient database schema and optimizing queries for large datasets.',
-    learnings: 'Gained expertise in async Python and database optimization techniques.',
-  },
-  {
-    slug: 'example-project-3',
-    name: 'Example Project 3',
-    description: 'A third project demonstrating your range and expertise. This design-focused project uses Astro and MDX for content-rich experiences.',
-    link: 'https://github.com/yourusername/project3',
-    demo: null,
-    videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    tags: ['Astro', 'MDX', 'Design'],
-    status: 'Archived',
-    year: '2023',
-    features: [
-      'Static site generation with Astro',
-      'Rich content with MDX',
-      'Custom design system',
-      'SEO optimized',
-    ],
-    challenges: 'Creating a cohesive design system that works across different content types.',
-    learnings: 'Learned the power of static site generation and component-driven design.',
+    challenges: 'The hardest part was making the feedback actionable. It\'s easy to tell someone "you mispronounced \'algorithm\'", it\'s much harder to explain that they\'re stressing the wrong syllable (AL-go-rithm vs al-GO-rithm) and give them a specific exercise to fix it. Getting GPT-3.5 to produce consistently useful phonetic feedback required careful prompt engineering with examples of good pronunciation coaching, not just error detection.',
+    learnings: 'SpeechSync taught me that the most impactful AI applications aren\'t the ones that do something impossible, they\'re the ones that make something expensive accessible. A human pronunciation coach costs $50-100/hour and is available in limited time zones. SpeechSync gives you 80% of that value for free, available 24/7, with infinite patience. The AI doesn\'t need to be perfect, it just needs to be good enough and always available.',
   },
 ];
 
-// Find the project by slug
 const project = projects.find((p) => p.slug === slug);
 
-// If no project found, return 404
 if (!project) {
   return Astro.redirect('/404', 404);
 }
 
-// Get other projects for "More Projects" section
 const relatedProjects = projects
   .filter((p) => p.slug !== project.slug)
-  .slice(0, 2);
+  .slice(0, 3);
+
+const tagIcons: Record<string, string> = {
+  'TypeScript': 'TS',
+  'CLI': '>_',
+  'AI': 'AI',
+  'VHS': 'VHS',
+  'GitHub API': 'GH',
+  'Next.js': 'N',
+  'LangBase': 'LB',
+  'RAG': 'RAG',
+  'Spotify API': 'SP',
+  'Cloudflare Pages': 'CF',
+  'Whisper ASR': 'WH',
+  'Cloudflare AI': 'CF',
+  'GPT-3.5': 'GPT',
+  'Git': 'GIT',
+};
 ---
 
-<BaseLayout title={project.name} description={project.description}>
+<BaseLayout title={project.name} description={project.description.split('\n')[0]}>
   <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
-    <!-- Main Content - Centered Project Details -->
     <article class="md:col-span-8 space-y-8 border-brand-text/10 px-8 pb-12 pt-0">
       <div class="space-y-4">
         <a
@@ -113,9 +229,9 @@ const relatedProjects = projects
             )}
             {project.demo && (
               <a href={project.demo} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-3 py-1.5 border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.02] hover:border-brand-accent3 text-xs text-brand-text/70 transition-all">
-              <svg class="w-4 h-4 text-brand-text/40 group-hover:text-brand-text/70 transition-colors" fill="none" viewBox="0 0 24 24" stroke="gray">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-              </svg>
+                <svg class="w-4 h-4 text-brand-text/40" fill="none" viewBox="0 0 24 24" stroke="gray">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                </svg>
                 Live Demo
               </a>
             )}
@@ -123,17 +239,16 @@ const relatedProjects = projects
         </div>
       </div>
 
-      <!-- Video Player -->
       {project.videoUrl && (
         <VideoPlayer videoUrl={project.videoUrl} title={project.name} />
       )}
 
-      <!-- Project Description -->
       <div class="space-y-4 text-brand-text/80 leading-relaxed">
-        <p class="text-lg">{project.description}</p>
+        {project.description.split('\n\n').map((paragraph) => (
+          <p class="text-[15px] leading-[1.75]">{paragraph}</p>
+        ))}
       </div>
 
-      <!-- Features -->
       <div class="space-y-4">
         <h2 class="text-2xl font-semibold text-brand-text flex items-center gap-2">
           <span class="w-1 h-8 bg-brand-accent2"></span>
@@ -142,32 +257,29 @@ const relatedProjects = projects
         <ul class="space-y-3 ml-6 border-l-2 border-dashed border-brand-text/20 pl-6">
           {project.features.map((feature) => (
             <li class="flex items-start gap-3 text-brand-text/80">
-              <span class="w-1.5 h-1.5 bg-brand-accent2 rotate-45 mt-2"></span>
-              {feature}
+              <span class="w-1.5 h-1.5 bg-brand-accent2 rotate-45 mt-2 shrink-0"></span>
+              <span class="text-[15px] leading-relaxed">{feature}</span>
             </li>
           ))}
         </ul>
       </div>
 
-      <!-- Challenges -->
       <div class="space-y-4 p-6 border border-dashed border-brand-text/10 bg-brand-text/[0.01]">
         <h2 class="text-xl font-semibold text-brand-text flex items-center gap-2">
           <span class="w-1 h-6 bg-brand-accent4"></span>
           Challenges
         </h2>
-        <p class="text-brand-text/80 leading-relaxed">{project.challenges}</p>
+        <p class="text-brand-text/80 leading-[1.75] text-[15px]">{project.challenges}</p>
       </div>
 
-      <!-- Learnings -->
       <div class="space-y-4 p-6 border border-dashed border-brand-text/10 bg-brand-text/[0.01]">
         <h2 class="text-xl font-semibold text-brand-text flex items-center gap-2">
           <span class="w-1 h-6 bg-brand-accent5"></span>
           What I Learned
         </h2>
-        <p class="text-brand-text/80 leading-relaxed">{project.learnings}</p>
+        <p class="text-brand-text/80 leading-[1.75] text-[15px]">{project.learnings}</p>
       </div>
 
-      <!-- Links -->
       <div class="flex gap-3 pt-4">
         <a
           href={project.link}
@@ -196,9 +308,7 @@ const relatedProjects = projects
       </div>
     </article>
 
-    <!-- Creative Sidebar for Project -->
     <div class="md:col-span-4 space-y-0 pt-0">
-      <!-- Project Info -->
       <div class="relative border-t border-l border-r border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
         <div class="absolute top-0 left-0 w-3 h-3 border-l-2 border-t-2 border-brand-accent3"></div>
 
@@ -222,12 +332,11 @@ const relatedProjects = projects
 
           <div class="flex items-center justify-between p-3 border border-dashed border-brand-text/10 bg-brand-text/[0.01]">
             <span>Stack</span>
-            <span class="font-mono text-xs text-brand-text/60">{project.tags.length} tech</span>
+            <span class="font-mono text-xs text-brand-text/60">{project.tags.length} technologies</span>
           </div>
         </div>
       </div>
 
-      <!-- Tech Stack -->
       <div class="relative border-t border-l border-r border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
         <h3 class="text-xs font-semibold text-brand-text/60 mb-4 tracking-widest uppercase flex items-center gap-2">
           <span class="w-1.5 h-1.5 bg-brand-accent2 rotate-45"></span>
@@ -237,24 +346,15 @@ const relatedProjects = projects
         <div class="grid grid-cols-3 gap-3">
           {project.tags.map((tag) => (
             <div class="aspect-square border border-dashed border-brand-text/10 bg-brand-text/[0.01] hover:bg-brand-text/[0.02] hover:border-brand-accent2 transition-all flex flex-col items-center justify-center p-3 group">
-              <div class="text-2xl mb-1 group-hover:scale-110 transition-transform">
-                {tag === 'TypeScript' && '📘'}
-                {tag === 'React' && '⚛️'}
-                {tag === 'Tailwind' && '🎨'}
-                {tag === 'Python' && '🐍'}
-                {tag === 'FastAPI' && '⚡'}
-                {tag === 'PostgreSQL' && '🐘'}
-                {tag === 'Astro' && '🚀'}
-                {tag === 'MDX' && '📝'}
-                {tag === 'Design' && '✨'}
-              </div>
-              <p class="text-[10px] text-brand-text/60 text-center leading-tight">{tag}</p>
+              <span class="text-sm font-mono font-bold text-brand-accent2 group-hover:scale-110 transition-transform">
+                {tagIcons[tag] || tag.slice(0, 2).toUpperCase()}
+              </span>
+              <p class="text-[10px] text-brand-text/60 text-center leading-tight mt-1">{tag}</p>
             </div>
           ))}
         </div>
       </div>
 
-      <!-- Quick Links -->
       <div class="relative border-t border-l border-r border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
         <h3 class="text-xs font-semibold text-brand-text/60 mb-4 tracking-widest uppercase flex items-center gap-2">
           <span class="w-1.5 h-1.5 bg-brand-accent4 rotate-45"></span>
@@ -280,7 +380,6 @@ const relatedProjects = projects
         </div>
       </div>
 
-      <!-- More Projects -->
       <div class="relative border border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
         <div class="absolute bottom-0 right-0 w-3 h-3 border-r-2 border-b-2 border-brand-accent5"></div>
 
@@ -295,7 +394,7 @@ const relatedProjects = projects
               <a href={`/projects/${p.slug}`} class="text-sm text-brand-text/80 hover:text-brand-text leading-snug block transition-colors">
                 {p.name}
               </a>
-              <div class="flex gap-1 mt-1">
+              <div class="flex gap-1.5 mt-1">
                 {p.tags.slice(0, 2).map((tag) => (
                   <span class="text-xs text-brand-text/50 font-mono">{tag}</span>
                 ))}

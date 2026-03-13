@@ -8,12 +8,11 @@ export const SITE_CONFIG = {
     email: 'arre.ankit@gmail.com',
     twitter: '@arre_ankit',
     github: 'arre-ankit',
-    linkedin: 'in/ankit-kumar-460606200',
+    linkedin: 'in/arre-ankit',
   },
   nav: [
     { name: 'Home', href: '/' },
     { name: 'Writing', href: '/writing' },
     { name: 'Projects', href: '/projects' },
-    { name: 'About', href: '/about' },
   ],
 };

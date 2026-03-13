@@ -12,13 +12,24 @@ export async function getStaticPaths() {
   }));
 }
 
-const { entry } = Astro.props;
-const { Content } = await entry.render();
-
-// Get all writing pieces for related essays
+const { slug } = Astro.params;
 const allWriting = await getCollection('writing', ({ data }) => {
   return data.draft !== true;
 });
+
+let entry = Astro.props.entry ?? allWriting.find((piece) => piece.slug === slug);
+
+if (!entry) {
+  return Astro.redirect('/writing');
+}
+
+const { Content } = await entry.render();
+
+const takeaways =
+  entry.data.takeaways?.length
+    ? entry.data.takeaways.slice(0, 3)
+    : ['Clear ideas, compressed', 'Concrete mental models', 'Practical next steps'];
+
 const relatedWriting = allWriting
   .filter((piece) => piece.slug !== entry.slug)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
@@ -69,10 +80,10 @@ function formatDate(date: Date) {
         prose-ul:my-6 prose-ul:space-y-2 prose-li:text-brand-text/90 prose-li:leading-relaxed
         prose-ol:my-6 prose-ol:space-y-2
         prose-code:text-purple-600 prose-code:bg-purple-50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-sm prose-code:text-sm prose-code:font-mono prose-code:before:content-[''] prose-code:after:content-['']
-        prose-pre:relative prose-pre:bg-gradient-to-br prose-pre:from-purple-950/40 prose-pre:to-purple-900/30 prose-pre:border-2 prose-pre:border-dashed prose-pre:border-purple-500/20 prose-pre:rounded-none prose-pre:p-6 prose-pre:overflow-x-auto prose-pre:my-8
+        prose-pre:relative prose-pre:bg-brand-text prose-pre:text-[#efe4d4] prose-pre:border-2 prose-pre:border-dashed prose-pre:border-brand-text/20 prose-pre:rounded-none prose-pre:p-6 prose-pre:overflow-x-auto prose-pre:my-8
         prose-pre:before:absolute prose-pre:before:top-0 prose-pre:before:left-0 prose-pre:before:w-3 prose-pre:before:h-3 prose-pre:before:border-l-2 prose-pre:before:border-t-2 prose-pre:before:border-purple-400
         prose-pre:after:absolute prose-pre:after:bottom-0 prose-pre:after:right-0 prose-pre:after:w-3 prose-pre:after:h-3 prose-pre:after:border-r-2 prose-pre:after:border-b-2 prose-pre:after:border-purple-500
-        prose-pre:code:bg-transparent prose-pre:code:p-0 prose-pre:code:text-purple-200 prose-pre:code:text-sm
+        prose-pre:code:bg-transparent prose-pre:code:p-0 prose-pre:code:text-[#efe4d4] prose-pre:code:text-sm
         prose-blockquote:relative prose-blockquote:border-l-2 prose-blockquote:border-dashed prose-blockquote:border-brand-accent3/30 prose-blockquote:pl-6 prose-blockquote:py-2 prose-blockquote:my-6 prose-blockquote:italic prose-blockquote:text-brand-text/70
         prose-blockquote:before:absolute prose-blockquote:before:left-0 prose-blockquote:before:top-0 prose-blockquote:before:w-1.5 prose-blockquote:before:h-1.5 prose-blockquote:before:bg-brand-accent3 prose-blockquote:before:rotate-45
         prose-hr:border-t-2 prose-hr:border-dashed prose-hr:border-brand-text/10 prose-hr:my-12
@@ -93,18 +104,12 @@ function formatDate(date: Date) {
         </h3>
 
         <div class="space-y-3 text-xs text-brand-text/70 leading-relaxed">
-          <div class="flex items-start gap-2 p-3 border border-dashed border-brand-text/10 bg-brand-text/[0.01]">
-            <span class="text-brand-accent2 mt-0.5">▸</span>
-            <p>Long-form thoughts on important topics</p>
-          </div>
-          <div class="flex items-start gap-2 p-3 border border-dashed border-brand-text/10 bg-brand-text/[0.01]">
-            <span class="text-brand-accent2 mt-0.5">▸</span>
-            <p>In-depth analysis and reflection</p>
-          </div>
-          <div class="flex items-start gap-2 p-3 border border-dashed border-brand-text/10 bg-brand-text/[0.01]">
-            <span class="text-brand-accent2 mt-0.5">▸</span>
-            <p>Lessons learned over time</p>
-          </div>
+          {takeaways.map((text) => (
+            <div class="flex items-start gap-2 p-3 border border-dashed border-brand-text/10 bg-brand-text/[0.01]">
+              <span class="text-brand-accent2 mt-0.5">▸</span>
+              <p>{text}</p>
+            </div>
+          ))}
         </div>
       </div>
 

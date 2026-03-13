@@ -1,29 +1,30 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-primary: #000000;
-  --color-brand-dashboard: #161618;
-  --color-brand-text: #f2f2f2;
-  --color-brand-accent1: #FAD000;
-  --color-brand-accent2: #818CF8;
-  --color-brand-accent3: #4ADE80;
-  --color-brand-accent4: #9C88FF;
-  --color-brand-accent5: #00F6FA;
-  --color-brand-accent6: #ED8B00;
-  --color-brand-accent7: #CC3D3A;
-  --color-brand-accent8: #FF2D1F;
-  --color-brand-accent9: #22C55E;
-  --color-brand-accent10: #9685FD;
+  /* Pastel almond theme: dark text on soft almond background */
+  --color-brand-primary: #2c2c2c;
+  --color-brand-dashboard: #e8e0d5;
+  --color-brand-text: #1f1f1f;
+  --color-brand-accent1: #c9a227;
+  --color-brand-accent2: #6b7fd7;
+  --color-brand-accent3: #3db368;
+  --color-brand-accent4: #7c6bc9;
+  --color-brand-accent5: #00c4c9;
+  --color-brand-accent6: #c4770a;
+  --color-brand-accent7: #a83230;
+  --color-brand-accent8: #d6241a;
+  --color-brand-accent9: #1a9e47;
+  --color-brand-accent10: #7a6bc4;
 }
 
 @layer base {
   * {
-    border-color: #161618;
+    border-color: #d4c9bc;
   }
 
   body {
-    background-color: #000000;
-    color: #f2f2f2;
+    background-color: #efe4d4;
+    color: #1f1f1f;
     overflow-y: scroll;
     scrollbar-gutter: stable;
     @apply antialiased;
@@ -31,7 +32,7 @@
   }
 
   ::selection {
-    @apply bg-brand-text text-brand-primary;
+    @apply bg-brand-text/90 text-[#efe4d4];
   }
 }
 
@@ -77,11 +78,11 @@
   }
 
   .prose code {
-    @apply bg-brand-primary px-1.5 py-0.5 rounded text-sm font-mono;
+    @apply bg-brand-dashboard px-1.5 py-0.5 rounded text-sm font-mono text-brand-text;
   }
 
   .prose pre {
-    @apply bg-brand-primary p-4 rounded-lg overflow-x-auto mb-4;
+    @apply bg-brand-dashboard p-4 rounded-lg overflow-x-auto mb-4 text-brand-text;
   }
 
   .prose pre code {

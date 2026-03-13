@@ -19,3 +19,9 @@ pnpm-debug.log*
 
 # macOS-specific files
 .DS_Store
+
+.commandcode
+.agents
+.claude
+CLAUDE.md
+skills-lock.json
