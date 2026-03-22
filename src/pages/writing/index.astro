@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import NewsletterSignup from '../../components/NewsletterSignup.astro';
 
 const allWriting = await getCollection('writing', ({ data }) => {
   return data.draft !== true;
@@ -90,6 +91,9 @@ const writingPieces = sortedWriting.length > 0 ? sortedWriting : [
           )}
         </div>
       </div>
+
+      <!-- Newsletter -->
+      <NewsletterSignup />
 
       <!-- Writing Stats -->
       <div class="relative border-t border-l border-r border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">

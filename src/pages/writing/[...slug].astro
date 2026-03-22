@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import NewsletterSignup from '../../components/NewsletterSignup.astro';
 
 export async function getStaticPaths() {
   const writingEntries = await getCollection('writing', ({ data }) => {
@@ -35,6 +36,25 @@ const relatedWriting = allWriting
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 3);
 
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: entry.data.title,
+  description: entry.data.description,
+  datePublished: entry.data.date.toISOString(),
+  author: {
+    '@type': 'Person',
+    name: 'Ankit Kumar',
+    url: 'https://ankitkr.com',
+  },
+  url: Astro.url.href,
+  publisher: {
+    '@type': 'Person',
+    name: 'Ankit Kumar',
+    url: 'https://ankitkr.com',
+  },
+};
+
 function formatDate(date: Date) {
   return new Date(date).toLocaleDateString('en-US', {
     year: 'numeric',
@@ -44,7 +64,7 @@ function formatDate(date: Date) {
 }
 ---
 
-<BaseLayout title={entry.data.title} description={entry.data.description}>
+<BaseLayout title={entry.data.title} description={entry.data.description} schema={articleSchema}>
   <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
     <!-- Main Content - Centered Essay -->
     <article class="md:col-span-8 space-y-8 border-l border-r border-dashed border-brand-text/10 px-8 pb-12 pt-0">
@@ -112,6 +132,9 @@ function formatDate(date: Date) {
           ))}
         </div>
       </div>
+
+      <!-- Newsletter -->
+      <NewsletterSignup />
 
       <!-- Share Card -->
       <div class="relative border-t border-l border-r border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">

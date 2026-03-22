@@ -10,7 +10,7 @@ export default defineConfig({
   integrations: [
     mdx(),
   ],
-  site: 'https://yourdomain.com',
+  site: 'https://ankitkr.com',
   vite: {
     server: {
       allowedHosts: true,
