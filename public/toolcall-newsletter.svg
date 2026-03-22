@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&amp;display=swap');
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="450" fill="#0a0a0a"/>
+
+  <!-- Grid dots -->
+  <pattern id="dots" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+    <circle cx="1" cy="1" r="1" fill="#ffffff" opacity="0.06"/>
+  </pattern>
+  <rect width="800" height="450" fill="url(#dots)"/>
+
+  <!-- Outer dashed border -->
+  <rect x="24" y="24" width="752" height="402" fill="none" stroke="#ffffff" stroke-width="1" stroke-dasharray="4 6" opacity="0.15"/>
+
+  <!-- Corner marks TL -->
+  <line x1="24" y1="24" x2="60" y2="24" stroke="#ffffff" stroke-width="1" opacity="0.4"/>
+  <line x1="24" y1="24" x2="24" y2="60" stroke="#ffffff" stroke-width="1" opacity="0.4"/>
+
+  <!-- Corner marks TR -->
+  <line x1="776" y1="24" x2="740" y2="24" stroke="#ffffff" stroke-width="1" opacity="0.4"/>
+  <line x1="776" y1="24" x2="776" y2="60" stroke="#ffffff" stroke-width="1" opacity="0.4"/>
+
+  <!-- Corner marks BL -->
+  <line x1="24" y1="426" x2="60" y2="426" stroke="#ffffff" stroke-width="1" opacity="0.4"/>
+  <line x1="24" y1="426" x2="24" y2="390" stroke="#ffffff" stroke-width="1" opacity="0.4"/>
+
+  <!-- Corner marks BR -->
+  <line x1="776" y1="426" x2="740" y2="426" stroke="#ffffff" stroke-width="1" opacity="0.4"/>
+  <line x1="776" y1="426" x2="776" y2="390" stroke="#ffffff" stroke-width="1" opacity="0.4"/>
+
+  <!-- Issue badge -->
+  <rect x="56" y="52" width="108" height="20" fill="none" stroke="#ffffff" stroke-width="1" stroke-dasharray="3 4" opacity="0.25"/>
+  <text x="66" y="66" font-family="monospace" font-size="9" fill="#ffffff" opacity="0.4" letter-spacing="2">NEWSLETTER</text>
+
+  <!-- Tool icon — wrench -->
+  <g transform="translate(56, 86)">
+    <path d="M10.7 2.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
+      fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Main title -->
+  <text x="82" y="102" font-family="monospace" font-size="13" fill="#a78bfa" font-weight="600" letter-spacing="3" opacity="0.9">TOOL CALL</text>
+
+  <!-- Horizontal rule -->
+  <line x1="56" y1="118" x2="744" y2="118" stroke="#ffffff" stroke-width="1" stroke-dasharray="3 5" opacity="0.12"/>
+
+  <!-- Hero headline -->
+  <text x="56" y="168" font-family="monospace" font-size="38" fill="#ffffff" font-weight="700" letter-spacing="-1">Improve Your</text>
+  <text x="56" y="214" font-family="monospace" font-size="38" fill="#ffffff" font-weight="700" letter-spacing="-1">Coding <tspan fill="#a78bfa">Workflows.</tspan></text>
+
+  <!-- Subline -->
+  <text x="56" y="252" font-family="monospace" font-size="13" fill="#ffffff" opacity="0.4" letter-spacing="0.5">Weekly deep-dives on AI tools · RAG systems · Agent workflows</text>
+
+  <!-- Horizontal rule -->
+  <line x1="56" y1="278" x2="744" y2="278" stroke="#ffffff" stroke-width="1" stroke-dasharray="3 5" opacity="0.12"/>
+
+  <!-- Three topic pills -->
+  <!-- Pill 1 -->
+  <rect x="56" y="296" width="130" height="28" fill="none" stroke="#a78bfa" stroke-width="1" stroke-dasharray="3 4" opacity="0.5"/>
+  <text x="73" y="314" font-family="monospace" font-size="10" fill="#a78bfa" opacity="0.8" letter-spacing="1">AI TOOLS</text>
+
+  <!-- Pill 2 -->
+  <rect x="200" y="296" width="130" height="28" fill="none" stroke="#ffffff" stroke-width="1" stroke-dasharray="3 4" opacity="0.2"/>
+  <text x="217" y="314" font-family="monospace" font-size="10" fill="#ffffff" opacity="0.4" letter-spacing="1">RAG SYSTEMS</text>
+
+  <!-- Pill 3 -->
+  <rect x="344" y="296" width="150" height="28" fill="none" stroke="#ffffff" stroke-width="1" stroke-dasharray="3 4" opacity="0.2"/>
+  <text x="361" y="314" font-family="monospace" font-size="10" fill="#ffffff" opacity="0.4" letter-spacing="1">AGENT WORKFLOWS</text>
+
+  <!-- Subscribe CTA box -->
+  <rect x="56" y="344" width="460" height="48" fill="#ffffff" opacity="0.04"/>
+  <rect x="56" y="344" width="460" height="48" fill="none" stroke="#ffffff" stroke-width="1" stroke-dasharray="3 5" opacity="0.15"/>
+  <text x="76" y="373" font-family="monospace" font-size="12" fill="#ffffff" opacity="0.25">your@email.com</text>
+
+  <!-- Subscribe button -->
+  <rect x="528" y="344" width="152" height="48" fill="#a78bfa"/>
+  <text x="551" y="373" font-family="monospace" font-size="11" fill="#0a0a0a" font-weight="700" letter-spacing="2">SUBSCRIBE →</text>
+
+  <!-- Bottom meta -->
+  <line x1="56" y1="408" x2="744" y2="408" stroke="#ffffff" stroke-width="1" stroke-dasharray="3 5" opacity="0.1"/>
+  <text x="56" y="428" font-family="monospace" font-size="9" fill="#ffffff" opacity="0.2" letter-spacing="1.5">BY ANKIT KUMAR · @ARRE_ANKIT · ANKITKR.COM</text>
+  <text x="680" y="428" font-family="monospace" font-size="9" fill="#a78bfa" opacity="0.4" letter-spacing="1">#TOOLCALL</text>
+</svg>

@@ -44,12 +44,11 @@
 
 <script>
   const form = document.getElementById('newsletter-form') as HTMLFormElement;
+
   form?.addEventListener('submit', (e) => {
     e.preventDefault();
     const email = (form.elements.namedItem('email') as HTMLInputElement).value;
-    window.open(
-      `https://toolcall.beehiiv.com/subscribe?email=${encodeURIComponent(email)}`,
-      '_blank'
-    );
+    const url = `https://toolcall.substack.com/subscribe?email=${encodeURIComponent(email)}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
   });
 </script>
