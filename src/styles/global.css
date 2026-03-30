@@ -17,12 +17,12 @@
 }
 
 :root {
-  --bg-body: #efe4d4;
+  --bg-body: #fcf5e4;
   --bg-dashboard: #e8e0d5;
   --border-base: #d4c9bc;
   --text-primary: #1f1f1f;
   --selection-bg: rgba(31, 31, 31, 0.9);
-  --selection-text: #efe4d4;
+  --selection-text: #fcf5e4;
 }
 
 html.dark {
