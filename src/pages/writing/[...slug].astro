@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import NewsletterSignup from '../../components/NewsletterSignup.astro';
 
 export async function getStaticPaths() {
   const writingEntries = await getCollection('writing', ({ data }) => {
@@ -132,9 +131,6 @@ function formatDate(date: Date) {
           ))}
         </div>
       </div>
-
-      <!-- Newsletter -->
-      <NewsletterSignup />
 
       <!-- Share Card -->
       <div class="relative border-t border-l border-r border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
