@@ -23,13 +23,12 @@ function formatDate(date: Date) {
   <SiteHeader variant="hero" />
   <MobileNav barless title="Ankit Kumar" items={sortedWriting.map((p) => ({ slug: p.slug, title: p.data.title }))} />
 
-  <div class="paper-serif">
-    <!-- Section header -->
-    <header class="text-center mb-14">
-      <p class="font-pixel text-sm uppercase tracking-widest text-brand-text/40">// Writing //</p>
-    </header>
+  <div class="space-y-8 px-5 sm:px-8 pb-12 pt-0">
+    <div class="space-y-2">
+      <h1 class="text-4xl font-semibold text-brand-text tracking-tight">Writing</h1>
+      <p class="text-brand-text/70">Essays and long-form thoughts</p>
+    </div>
 
-    <!-- Card grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 border-t border-l border-solid border-brand-text/15">
       {sortedWriting.map((piece, index) => (
         <a

@@ -1,0 +1,34 @@
+---
+// Fixed scroll-progress rail shown on the right edge (large screens only).
+---
+
+<div
+  class="hidden lg:flex fixed right-5 top-1/2 -translate-y-1/2 z-20 flex-col items-end pointer-events-none select-none"
+  aria-hidden="true"
+>
+  <span id="scroll-progress" class="font-pixel text-xs text-[#0D3EFF] dark:text-[#FF5F1F] mb-4 tabular-nums">0.00</span>
+  <div class="relative h-[70vh] flex flex-col justify-between items-end font-pixel text-brand-text/15 text-[10px] leading-none overflow-hidden">
+    {Array.from({ length: 32 }).map(() => (
+      <span>—</span>
+    ))}
+    <span id="scroll-marker" class="absolute right-0 top-0 text-brand-text/70 dark:text-brand-text/80 transition-[top] duration-75">▶</span>
+  </div>
+</div>
+
+<script>
+  function updateScrollProgress() {
+    const el = document.documentElement;
+    const max = el.scrollHeight - el.clientHeight;
+    const ratio = max > 0 ? Math.min(1, el.scrollTop / max) : 0;
+
+    const label = document.getElementById('scroll-progress');
+    if (label) label.textContent = ratio.toFixed(2);
+
+    const marker = document.getElementById('scroll-marker');
+    if (marker) marker.style.top = `calc(${ratio * 100}% - 0.5em)`;
+  }
+
+  updateScrollProgress();
+  window.addEventListener('scroll', updateScrollProgress, { passive: true });
+  window.addEventListener('resize', updateScrollProgress);
+</script>

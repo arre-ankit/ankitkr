@@ -10,9 +10,19 @@ interface Props {
   currentSlug?: string;
   barClass?: string;
   barless?: boolean;
+  tocLabel?: string;
+  tocBase?: string;
 }
 
-const { title, items, currentSlug, barClass = '', barless = false } = Astro.props;
+const {
+  title,
+  items,
+  currentSlug,
+  barClass = '',
+  barless = false,
+  tocLabel = 'Writing',
+  tocBase = '/writing',
+} = Astro.props;
 ---
 
 {!barless && (
@@ -59,13 +69,13 @@ const { title, items, currentSlug, barClass = '', barless = false } = Astro.prop
       <a href="/projects" class="text-brand-text/60 hover:text-brand-text uppercase tracking-wide">Projects</a>
     </nav>
 
-    <p class="font-pixel text-xs uppercase tracking-widest text-brand-text/50 mb-4">Writing</p>
+    <p class="font-pixel text-xs uppercase tracking-widest text-brand-text/50 mb-4">{tocLabel}</p>
     <ul class="space-y-3">
       {items.map((piece, index) => (
         <li class="flex items-start gap-2 text-[15px] leading-snug paper-serif">
           <span class="font-pixel text-xs text-brand-text/30 mt-1 shrink-0">{String(index + 1).padStart(2, '0')}</span>
           <a
-            href={`/writing/${piece.slug}`}
+            href={`${tocBase}/${piece.slug}`}
             class={
               piece.slug === currentSlug
                 ? 'text-[#0D3EFF] dark:text-[#FF5F1F]'
