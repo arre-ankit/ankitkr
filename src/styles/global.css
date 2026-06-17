@@ -128,7 +128,7 @@ html.dark {
   }
 
   .prose a {
-    @apply text-brand-text underline underline-offset-4 decoration-brand-text/40 hover:decoration-brand-text transition-colors;
+    @apply text-brand-text underline underline-offset-4 decoration-brand-text/40 hover:decoration-current hover:text-[#0D3EFF] dark:hover:text-[#FF5F1F] transition-colors;
   }
 
   .prose ul,

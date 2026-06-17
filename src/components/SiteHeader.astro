@@ -32,7 +32,7 @@ const titleClass = `font-pixel ${titleSize} font-normal tracking-tight uppercase
         id="theme-toggle"
         type="button"
         aria-label="Toggle dark mode"
-        class="flex items-center gap-1.5 text-left sm:text-right text-brand-text/60 hover:text-brand-text transition-colors uppercase tracking-wide cursor-pointer"
+        class="flex items-center gap-1.5 text-left sm:text-right text-brand-text/60 hover:text-[#0D3EFF] dark:hover:text-[#FF5F1F] transition-colors uppercase tracking-wide cursor-pointer"
       >
         <span class="theme-label theme-label-dark">
           <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
@@ -48,7 +48,7 @@ const titleClass = `font-pixel ${titleSize} font-normal tracking-tight uppercase
         </span>
       </button>
       {SITE_CONFIG.nav.filter((item) => item.href !== '/').map((item) => (
-        <a href={item.href} class="text-brand-text/60 hover:text-brand-text transition-colors uppercase tracking-wide">
+        <a href={item.href} class="text-brand-text/60 hover:text-[#0D3EFF] dark:hover:text-[#FF5F1F] transition-colors uppercase tracking-wide">
           {item.name}
         </a>
       ))}
