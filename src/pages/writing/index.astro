@@ -1,6 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import MobileNav from '../../components/MobileNav.astro';
 
 const allWriting = await getCollection('writing', ({ data }) => {
   return data.draft !== true;
@@ -8,157 +10,59 @@ const allWriting = await getCollection('writing', ({ data }) => {
 
 const sortedWriting = allWriting.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-// Define writing pieces with categories for better organization
-const writingPieces = sortedWriting.length > 0 ? sortedWriting : [
-  { title: 'Developer Experience', slug: '#', category: 'Development' },
-  { title: 'Developer Marketing', slug: '#', category: 'Development' },
-  { title: 'Developer Relations', slug: '#', category: 'Development' },
-  { title: 'Developer Products', slug: '#', category: 'Development' },
-  { title: 'Documentation', slug: '#', category: 'Development' },
-  { title: 'Community Moderation', slug: '#', category: 'Community' },
-  { title: 'Reflections on the React community', slug: '#', category: 'Community' },
-  { title: '5 Things I Learned from 5 Years at Company', slug: '#', category: 'Career' },
-  { title: 'AI Agents', slug: '#', category: 'Technology' },
-  { title: 'Personal Software', slug: '#', category: 'Technology' },
-  { title: 'My Stack', slug: '#', category: 'Technology' },
-  { title: 'Things I Believe', slug: '#', category: 'Philosophy' },
-  { title: 'How I\'m Writing CSS', slug: '#', category: 'Development' },
-  { title: 'Understanding AI', slug: '#', category: 'Technology' },
-  { title: 'Product Engineers', slug: '#', category: 'Career' },
-  { title: 'Rust is Eating JavaScript', slug: '#', category: 'Technology' },
-  { title: 'The Story of Heroku', slug: '#', category: 'Technology' },
-];
+function formatDate(date: Date) {
+  return new Date(date).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}
 ---
 
 <BaseLayout title="Writing" description="Essays and long-form thoughts">
-  <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
-    <!-- Main Content - Centered Writing List -->
-    <div class="md:col-span-8 space-y-8 border-brand-text/10 px-8 pb-12 pt-0">
-      <div class="space-y-2">
-        <h1 class="text-4xl font-semibold text-brand-text tracking-tight">Writing</h1>
-        <p class="text-brand-text/70">Essays and long-form thoughts</p>
-      </div>
+  <SiteHeader variant="hero" />
+  <MobileNav barless title="Ankit Kumar" items={sortedWriting.map((p) => ({ slug: p.slug, title: p.data.title }))} />
 
-      <div>
-        <p class="text-brand-text/80 mb-6 leading-relaxed">
-          I write about technology, development, and the lessons I've learned along the way. Here's a collection of my essays:
-        </p>
+  <div class="paper-serif">
+    <!-- Section header -->
+    <header class="text-center mb-14">
+      <p class="font-pixel text-sm uppercase tracking-widest text-brand-text/40">// Writing //</p>
+    </header>
 
-        <div class="space-y-3">
-          {writingPieces.map((piece, index) => (
-            <div class="group flex items-start gap-4 py-3 border-b border-dashed border-brand-text/10 last:border-b-0 hover:bg-brand-text/[0.01] transition-all px-2 -mx-2">
-              <span class="text-xs font-mono text-brand-text/40 mt-0.5 w-8">{String(index + 1).padStart(2, '0')}</span>
-              <div class="flex-1">
-                <a
-                  href={sortedWriting.length > 0 ? `/writing/${piece.slug}` : piece.slug}
-                  class="text-brand-text hover:text-brand-accent2 transition-colors inline-flex items-center gap-2"
-                >
-                  <span>{sortedWriting.length > 0 ? piece.data.title : piece.title}</span>
-                  <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                  </svg>
-                </a>
-                {!sortedWriting.length && piece.category && (
-                  <span class="ml-3 text-xs text-brand-text/50 font-mono">· {piece.category}</span>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+    <!-- Card grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 border-t border-l border-solid border-brand-text/15">
+      {sortedWriting.map((piece, index) => (
+        <a
+          href={`/writing/${piece.slug}`}
+          class="group flex flex-col p-6 md:p-8 border-b border-r border-solid border-brand-text/15 hover:bg-brand-text/[0.015] dark:hover:bg-white/[0.02] transition-colors"
+        >
+          <div class="relative aspect-[4/3] mb-6 flex items-center justify-center overflow-hidden border border-solid border-brand-text/15 bg-brand-text/[0.015] dark:bg-white/[0.02] group-hover:border-brand-text/30 transition-colors">
+            {piece.data.cover ? (
+              <img src={piece.data.cover} alt={piece.data.title} class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+            ) : (
+              <span class="font-pixel text-7xl md:text-8xl text-brand-text/[0.08] group-hover:text-[#0D3EFF]/25 dark:group-hover:text-[#FF5F1F]/30 transition-colors select-none">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+            )}
+            <div class="absolute top-2 left-2 w-3 h-3 border-l-2 border-t-2 border-[#0D3EFF] dark:border-[#FF5F1F] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div class="absolute bottom-2 right-2 w-3 h-3 border-r-2 border-b-2 border-[#0D3EFF] dark:border-[#FF5F1F] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          </div>
 
-    <!-- Creative Sidebar for Writing -->
-    <div class="md:col-span-4 space-y-0 pt-0">
-      <!-- Featured Essays Card -->
-      <div class="relative border-t border-l border-r border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
-        <div class="absolute top-0 left-0 w-3 h-3 border-l-2 border-t-2 border-brand-accent3"></div>
-
-        <div class="flex items-center gap-2 mb-4">
-          <span class="text-2xl">⭐</span>
-          <h3 class="text-xs font-semibold text-brand-text/60 tracking-widest uppercase">Featured</h3>
-        </div>
-
-        <div class="space-y-3">
-          {sortedWriting.length > 0 && (
-            <div class="pl-4 border-l-2 border-dashed border-brand-accent3/30 hover:border-brand-accent3 transition-colors">
-              <a href={`/writing/${sortedWriting[0].slug}`} class="text-sm text-brand-text/80 hover:text-brand-text leading-snug block transition-colors font-medium">
-                {sortedWriting[0].data.title}
-              </a>
-              <p class="text-xs text-brand-text/50 mt-1">{sortedWriting[0].data.description}</p>
-            </div>
+          <time class="font-pixel text-[10px] uppercase tracking-wide text-brand-text/35 mb-2 block">
+            {formatDate(piece.data.date)}
+          </time>
+          <h2 class="text-xl md:text-2xl text-brand-text/90 group-hover:text-[#0D3EFF] dark:group-hover:text-[#FF5F1F] transition-colors leading-snug">
+            {piece.data.title}
+          </h2>
+          {piece.data.description && (
+            <p class="text-sm text-brand-text/55 mt-2.5 leading-relaxed">{piece.data.description}</p>
           )}
-        </div>
-      </div>
 
-      <!-- Writing Stats -->
-      <div class="relative border-t border-l border-r border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
-        <h3 class="text-xs font-semibold text-brand-text/60 mb-4 tracking-widest uppercase flex items-center gap-2">
-          <span class="w-1.5 h-1.5 bg-brand-accent2 rotate-45"></span>
-          Stats
-        </h3>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div class="text-center p-3 border border-dashed border-brand-text/10 bg-brand-text/[0.01]">
-            <p class="text-2xl font-semibold text-brand-text mb-1">{writingPieces.length}</p>
-            <p class="text-xs text-brand-text/60">Essays</p>
-          </div>
-
-          <div class="text-center p-3 border border-dashed border-brand-text/10 bg-brand-text/[0.01]">
-            <p class="text-2xl font-semibold text-brand-text mb-1">50k</p>
-            <p class="text-xs text-brand-text/60">Words</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Topics I Cover -->
-      <div class="relative border-t border-l border-r border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
-        <h3 class="text-xs font-semibold text-brand-text/60 mb-4 tracking-widest uppercase flex items-center gap-2">
-          <span class="w-1.5 h-1.5 bg-brand-accent4 rotate-45"></span>
-          Topics
-        </h3>
-
-        <div class="flex flex-wrap gap-2">
-          <span class="px-3 py-1.5 border border-dashed border-brand-text/10 bg-brand-text/[0.01] text-xs text-brand-text/70">
-            Development
+          <span class="font-pixel text-[10px] uppercase tracking-wide text-brand-text/30 group-hover:text-[#0D3EFF] dark:group-hover:text-[#FF5F1F] transition-colors mt-5 inline-flex items-center gap-1.5">
+            Read <span class="group-hover:translate-x-1 transition-transform">→</span>
           </span>
-          <span class="px-3 py-1.5 border border-dashed border-brand-text/10 bg-brand-text/[0.01] text-xs text-brand-text/70">
-            Technology
-          </span>
-          <span class="px-3 py-1.5 border border-dashed border-brand-text/10 bg-brand-text/[0.01] text-xs text-brand-text/70">
-            Career
-          </span>
-          <span class="px-3 py-1.5 border border-dashed border-brand-text/10 bg-brand-text/[0.01] text-xs text-brand-text/70">
-            Philosophy
-          </span>
-          <span class="px-3 py-1.5 border border-dashed border-brand-text/10 bg-brand-text/[0.01] text-xs text-brand-text/70">
-            Community
-          </span>
-        </div>
-      </div>
-
-      <!-- My Writing Process -->
-      <div class="relative border-t border-l border-r border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
-        <h3 class="text-xs font-semibold text-brand-text/60 mb-4 tracking-widest uppercase flex items-center gap-2">
-          <span class="w-1.5 h-1.5 bg-brand-accent5 rotate-45"></span>
-          How I Write
-        </h3>
-
-        <div class="space-y-3 text-xs text-brand-text/70 leading-relaxed">
-          <div class="flex items-start gap-2">
-            <span class="text-brand-accent5 mt-0.5">▸</span>
-            <p>I write to clarify my thinking</p>
-          </div>
-          <div class="flex items-start gap-2">
-            <span class="text-brand-accent5 mt-0.5">▸</span>
-            <p>Every essay starts as a collection of notes</p>
-          </div>
-          <div class="flex items-start gap-2">
-            <span class="text-brand-accent5 mt-0.5">▸</span>
-            <p>I prefer depth over frequency</p>
-          </div>
-        </div>
-      </div>
+        </a>
+      ))}
     </div>
   </div>
 </BaseLayout>

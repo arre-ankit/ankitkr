@@ -1,0 +1,133 @@
+---
+interface Item {
+  slug: string;
+  title: string;
+}
+
+interface Props {
+  title: string;
+  items: Item[];
+  currentSlug?: string;
+  barClass?: string;
+  barless?: boolean;
+}
+
+const { title, items, currentSlug, barClass = '', barless = false } = Astro.props;
+---
+
+{!barless && (
+  <!-- Mobile top bar -->
+  <div class={`lg:hidden sticky top-0 z-40 -mx-5 sm:-mx-8 px-5 py-3 bg-[var(--bg-body)]/95 backdrop-blur border-b border-solid border-brand-text/15 flex items-center gap-3 font-pixel ${barClass}`}>
+    <button id="toc-open" type="button" aria-label="Open menu" class="shrink-0 p-1 text-brand-text/70 hover:text-brand-text">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+        <line x1="4" y1="7" x2="20" y2="7" /><line x1="4" y1="12" x2="20" y2="12" /><line x1="4" y1="17" x2="14" y2="17" />
+      </svg>
+    </button>
+    <span class="flex-1 truncate text-[11px] uppercase tracking-wide text-brand-text/70">{title}</span>
+    <button type="button" aria-label="Toggle dark mode" class="js-theme-toggle shrink-0 p-1 text-brand-text/70 hover:text-brand-text">
+      <span class="m-theme m-theme-dark">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+      </span>
+      <span class="m-theme m-theme-light">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path></svg>
+      </span>
+    </button>
+  </div>
+)}
+
+<!-- Mobile slide-out drawer -->
+<div id="toc-drawer" class="lg:hidden fixed inset-0 z-50">
+  <div id="toc-overlay" class="absolute inset-0 bg-black/40"></div>
+  <div class="toc-panel absolute inset-y-0 left-0 w-[85%] max-w-sm bg-[var(--bg-body)] p-6 overflow-y-auto">
+    <div class="flex items-center justify-between mb-8">
+      <a href="/" class="font-pixel text-lg uppercase tracking-tight text-[#0D3EFF] dark:text-[#FF5F1F]">Ankit Kumar</a>
+      <button id="toc-close" type="button" aria-label="Close menu" class="font-pixel text-brand-text/50 hover:text-brand-text text-lg leading-none">✕</button>
+    </div>
+
+    <nav class="font-pixel flex flex-col gap-3 text-sm mb-8">
+      <button type="button" aria-label="Toggle dark mode" class="js-theme-toggle flex items-center text-left text-brand-text/60 hover:text-brand-text uppercase tracking-wide">
+        <span class="m-theme m-theme-dark">
+          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+          Dark Mode
+        </span>
+        <span class="m-theme m-theme-light">
+          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path></svg>
+          Light Mode
+        </span>
+      </button>
+      <a href="/writing" class="text-brand-text/60 hover:text-brand-text uppercase tracking-wide">Writing</a>
+      <a href="/projects" class="text-brand-text/60 hover:text-brand-text uppercase tracking-wide">Projects</a>
+    </nav>
+
+    <p class="font-pixel text-xs uppercase tracking-widest text-brand-text/50 mb-4">Writing</p>
+    <ul class="space-y-3">
+      {items.map((piece, index) => (
+        <li class="flex items-start gap-2 text-[15px] leading-snug paper-serif">
+          <span class="font-pixel text-xs text-brand-text/30 mt-1 shrink-0">{String(index + 1).padStart(2, '0')}</span>
+          <a
+            href={`/writing/${piece.slug}`}
+            class={
+              piece.slug === currentSlug
+                ? 'text-[#0D3EFF] dark:text-[#FF5F1F]'
+                : 'text-brand-text/70 hover:text-brand-text transition-colors'
+            }
+          >
+            {piece.title}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
+
+<style>
+  #toc-drawer {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  #toc-drawer.is-open {
+    visibility: visible;
+    opacity: 1;
+  }
+  #toc-drawer .toc-panel {
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+  }
+  #toc-drawer.is-open .toc-panel {
+    transform: translateX(0);
+  }
+  .m-theme {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .m-theme.is-visible {
+    display: inline-flex;
+  }
+</style>
+
+<script>
+  const drawer = document.getElementById('toc-drawer');
+  const closeDrawer = () => drawer?.classList.remove('is-open');
+  document.getElementById('toc-open')?.addEventListener('click', () => drawer?.classList.add('is-open'));
+  document.getElementById('toc-close')?.addEventListener('click', closeDrawer);
+  document.getElementById('toc-overlay')?.addEventListener('click', closeDrawer);
+
+  const mSwitchSound = new Audio('/light-switch.mp3');
+  function syncMobileTheme() {
+    const isDark = document.documentElement.classList.contains('dark');
+    document.querySelectorAll('.m-theme-light').forEach((el) => el.classList.toggle('is-visible', isDark));
+    document.querySelectorAll('.m-theme-dark').forEach((el) => el.classList.toggle('is-visible', !isDark));
+  }
+  document.querySelectorAll('.js-theme-toggle').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      syncMobileTheme();
+      mSwitchSound.currentTime = 0;
+      mSwitchSound.play().catch(() => {});
+    });
+  });
+  syncMobileTheme();
+</script>

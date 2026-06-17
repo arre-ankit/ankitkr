@@ -1,6 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import MobileNav from '../../components/MobileNav.astro';
+import { SITE_CONFIG } from '../../config';
 
 export async function getStaticPaths() {
   const writingEntries = await getCollection('writing', ({ data }) => {
@@ -25,15 +28,9 @@ if (!entry) {
 
 const { Content } = await entry.render();
 
-const takeaways =
-  entry.data.takeaways?.length
-    ? entry.data.takeaways.slice(0, 3)
-    : ['Clear ideas, compressed', 'Concrete mental models', 'Practical next steps'];
+const sortedWriting = allWriting.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-const relatedWriting = allWriting
-  .filter((piece) => piece.slug !== entry.slug)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 3);
+const wordCount = entry.body.trim().split(/\s+/).filter(Boolean).length;
 
 const articleSchema = {
   '@context': 'https://schema.org',
@@ -53,131 +50,122 @@ const articleSchema = {
     url: 'https://ankitkr.com',
   },
 };
-
-function formatDate(date: Date) {
-  return new Date(date).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-}
 ---
 
-<BaseLayout title={entry.data.title} description={entry.data.description} schema={articleSchema}>
-  <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
-    <!-- Main Content - Centered Essay -->
-    <article class="md:col-span-8 space-y-8 border-l border-r border-dashed border-brand-text/10 px-8 pb-12 pt-0">
-      <div class="space-y-4">
-        <a
-          href="/writing"
-          class="inline-flex items-center gap-2 text-sm text-brand-text/60 hover:text-brand-text transition-colors"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-          </svg>
-          Back to writing
-        </a>
+<BaseLayout title={entry.data.title} description={entry.data.description} schema={articleSchema} reader={true}>
+  <div class="hidden lg:block">
+    <SiteHeader variant="compact" />
+  </div>
 
-        <h1 class="text-4xl font-semibold text-brand-text tracking-tight">
-          {entry.data.title}
-        </h1>
+  <MobileNav title={entry.data.title} items={sortedWriting.map((p) => ({ slug: p.slug, title: p.data.title }))} currentSlug={entry.slug} />
 
-        <div class="flex items-center gap-4 text-sm text-brand-text/60 border-l-2 border-dashed border-brand-text/20 pl-4">
-          <time class="font-mono">{formatDate(entry.data.date)}</time>
-          <span class="w-1 h-1 rounded-full bg-brand-text/30"></span>
-          <span>10 min read</span>
-        </div>
+  <div class="grid grid-cols-1 lg:grid-cols-12 lg:gap-0 lg:flex-1 lg:min-h-0 lg:overflow-hidden">
+    <!-- Left: Table of Contents -->
+    <aside class="hidden lg:block lg:col-span-2 lg:h-full lg:overflow-y-auto">
+      <div class="pr-6 pt-1">
+        <p class="font-pixel text-xs uppercase tracking-widest text-brand-text/50 mb-4">Writing</p>
+        <ul class="space-y-2.5">
+          {sortedWriting.map((piece, index) => (
+            <li class="flex items-start gap-2 text-[15px] leading-snug">
+              <span class="font-pixel text-xs text-brand-text/30 mt-1 shrink-0">{String(index + 1).padStart(2, '0')}</span>
+              <a
+                href={`/writing/${piece.slug}`}
+                class={
+                  piece.slug === entry.slug
+                    ? 'text-[#0D3EFF] dark:text-[#FF5F1F]'
+                    : 'text-brand-text/70 hover:text-brand-text transition-colors'
+                }
+              >
+                {piece.data.title}
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
+    </aside>
 
-      <div class="prose max-w-none
-        prose-headings:text-brand-text prose-headings:font-semibold prose-headings:tracking-tight
-        prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4 prose-h2:flex prose-h2:items-center prose-h2:gap-2 prose-h2:before:content-[''] prose-h2:before:w-1 prose-h2:before:h-6 prose-h2:before:bg-brand-accent2
-        prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
-        prose-p:text-brand-text/90 prose-p:leading-relaxed prose-p:mb-4
-        prose-a:text-brand-text prose-a:underline prose-a:underline-offset-4 prose-a:decoration-brand-text/40 hover:prose-a:decoration-brand-text prose-a:transition-colors
-        prose-strong:text-brand-text prose-strong:font-semibold
-        prose-ul:my-6 prose-ul:space-y-2 prose-li:text-brand-text/90 prose-li:leading-relaxed
-        prose-ol:my-6 prose-ol:space-y-2
-        prose-code:text-brand-accent4 prose-code:bg-brand-accent4/10 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-sm prose-code:text-sm prose-code:font-mono prose-code:before:content-[''] prose-code:after:content-['']
-        prose-pre:relative prose-pre:bg-brand-dashboard prose-pre:text-brand-text prose-pre:border-2 prose-pre:border-dashed prose-pre:border-brand-text/20 prose-pre:rounded-none prose-pre:p-6 prose-pre:overflow-x-auto prose-pre:my-8
-        prose-pre:before:absolute prose-pre:before:top-0 prose-pre:before:left-0 prose-pre:before:w-3 prose-pre:before:h-3 prose-pre:before:border-l-2 prose-pre:before:border-t-2 prose-pre:before:border-purple-400
-        prose-pre:after:absolute prose-pre:after:bottom-0 prose-pre:after:right-0 prose-pre:after:w-3 prose-pre:after:h-3 prose-pre:after:border-r-2 prose-pre:after:border-b-2 prose-pre:after:border-purple-500
-        prose-pre:code:bg-transparent prose-pre:code:p-0 prose-pre:code:text-brand-text prose-pre:code:text-sm
-        prose-blockquote:relative prose-blockquote:border-l-2 prose-blockquote:border-dashed prose-blockquote:border-brand-accent3/30 prose-blockquote:pl-6 prose-blockquote:py-2 prose-blockquote:my-6 prose-blockquote:italic prose-blockquote:text-brand-text/70
-        prose-blockquote:before:absolute prose-blockquote:before:left-0 prose-blockquote:before:top-0 prose-blockquote:before:w-1.5 prose-blockquote:before:h-1.5 prose-blockquote:before:bg-brand-accent3 prose-blockquote:before:rotate-45
-        prose-hr:border-t-2 prose-hr:border-dashed prose-hr:border-brand-text/10 prose-hr:my-12
-        prose-img:border-2 prose-img:border-dashed prose-img:border-brand-text/10 prose-img:my-8">
-        <Content />
+    <!-- Center: Article -->
+    <article id="paper-scroll" class="lg:col-span-9 paper-serif lg:px-8 lg:h-full lg:overflow-y-auto lg:pb-12">
+      <div class="mx-auto rounded-sm p-8 md:bg-white md:shadow-[0px_1px_4px_1px_rgba(0,0,0,0.05),0px_1px_1px_0px_rgba(0,0,0,0.08)] dark:md:bg-[#141417] dark:md:shadow-none lg:px-16 lg:py-20">
+        <!-- Title block -->
+        <header class="text-center mb-12">
+          <p class="font-pixel text-xs uppercase tracking-widest text-brand-text/50 mb-6">
+            {wordCount.toLocaleString()} Words &nbsp;|&nbsp; {SITE_CONFIG.author.name}
+          </p>
+          <h1 class="text-4xl md:text-5xl text-brand-text leading-tight mb-6">
+            {entry.data.title}
+          </h1>
+          <p class="text-lg md:text-xl text-brand-text/60 leading-relaxed max-w-xl mx-auto">
+            {entry.data.description}
+          </p>
+          <p class="text-brand-text/30 tracking-[0.4em] mt-10 select-none">-----</p>
+        </header>
+
+        {entry.data.cover && (
+          <figure class="not-prose mb-12 overflow-hidden border border-solid border-brand-text/10">
+            <img
+              src={entry.data.cover}
+              alt={entry.data.title}
+              class="w-full h-auto"
+              loading="eager"
+            />
+          </figure>
+        )}
+
+        <!-- Body -->
+        <div class="prose max-w-none text-[17px]
+          prose-headings:text-brand-text prose-headings:tracking-tight
+          prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4
+          prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
+          prose-p:text-brand-text/90 prose-p:leading-[1.8] prose-p:mb-6
+          prose-a:text-brand-text prose-a:underline prose-a:underline-offset-4 prose-a:decoration-brand-text/40 hover:prose-a:decoration-brand-text prose-a:transition-colors
+          prose-strong:text-brand-text prose-strong:font-semibold
+          prose-ul:my-6 prose-ul:space-y-2 prose-li:text-brand-text/90 prose-li:leading-[1.8]
+          prose-ol:my-6 prose-ol:space-y-2
+          prose-code:font-mono prose-code:text-brand-accent4 prose-code:bg-brand-accent4/10 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-sm prose-code:text-sm prose-code:before:content-[''] prose-code:after:content-['']
+          prose-pre:bg-brand-dashboard prose-pre:text-brand-text prose-pre:border prose-pre:border-solid prose-pre:border-brand-text/20 prose-pre:rounded-none prose-pre:p-6 prose-pre:overflow-x-auto prose-pre:my-8
+          prose-blockquote:border-l-2 prose-blockquote:border-brand-text/20 prose-blockquote:pl-6 prose-blockquote:py-1 prose-blockquote:my-8 prose-blockquote:italic prose-blockquote:text-brand-text/70
+          prose-hr:border-t prose-hr:border-solid prose-hr:border-brand-text/15 prose-hr:my-12
+          prose-img:border prose-img:border-solid prose-img:border-brand-text/10 prose-img:my-10 prose-img:mx-auto">
+          <Content />
+        </div>
       </div>
     </article>
 
-    <!-- Creative Sidebar for Writing -->
-    <div class="md:col-span-4 space-y-0 pt-0">
-      <!-- Essay Info Card -->
-      <div class="relative border-t border-l border-r border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
-        <div class="absolute top-0 left-0 w-3 h-3 border-l-2 border-t-2 border-brand-accent3"></div>
-
-        <h3 class="text-xs font-semibold text-brand-text/60 mb-4 tracking-widest uppercase flex items-center gap-2">
-          <span class="w-1.5 h-1.5 bg-brand-accent3 rotate-45"></span>
-          Key Takeaways
-        </h3>
-
-        <div class="space-y-3 text-xs text-brand-text/70 leading-relaxed">
-          {takeaways.map((text) => (
-            <div class="flex items-start gap-2 p-3 border border-dashed border-brand-text/10 bg-brand-text/[0.01]">
-              <span class="text-brand-accent2 mt-0.5">▸</span>
-              <p>{text}</p>
-            </div>
+    <!-- Right: Reading progress rail -->
+    <aside class="hidden lg:block lg:col-span-1 lg:h-full">
+      <div class="flex flex-col items-end pl-2 pt-1">
+        <span id="reading-progress" class="font-pixel text-xs text-[#0D3EFF] dark:text-[#FF5F1F] mb-4 tabular-nums">0.00</span>
+        <div class="relative w-full h-[60vh] flex flex-col justify-between items-end font-pixel text-brand-text/15 text-[10px] leading-none overflow-hidden" aria-hidden="true">
+          {Array.from({ length: 28 }).map(() => (
+            <span>—</span>
           ))}
+          <span id="progress-marker" class="absolute right-0 top-0 text-brand-text/70 dark:text-brand-text/80 transition-[top] duration-75">▶</span>
         </div>
       </div>
-
-      <!-- Share Card -->
-      <div class="relative border-t border-l border-r border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
-        <h3 class="text-xs font-semibold text-brand-text/60 mb-4 tracking-widest uppercase flex items-center gap-2">
-          <span class="w-1.5 h-1.5 bg-brand-accent4 rotate-45"></span>
-          Share
-        </h3>
-
-        <div class="space-y-2">
-          <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(entry.data.title)}&url=${encodeURIComponent(Astro.url.href)}`} target="_blank" rel="noopener noreferrer" class="group flex items-center justify-between p-3 border border-dashed border-brand-text/10 hover:border-brand-text/20 bg-brand-text/[0.01] hover:bg-brand-text/[0.02] transition-all">
-            <span class="text-sm text-brand-text/70 group-hover:text-brand-text transition-colors">Twitter</span>
-            <svg class="w-4 h-4 text-brand-text/40 group-hover:text-brand-text/70 transition-colors" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-            </svg>
-          </a>
-
-          <button onclick="navigator.clipboard.writeText(window.location.href)" class="group w-full flex items-center justify-between p-3 border border-dashed border-brand-text/10 hover:border-brand-text/20 bg-brand-text/[0.01] hover:bg-brand-text/[0.02] transition-all">
-            <span class="text-sm text-brand-text/70 group-hover:text-brand-text transition-colors">Copy link</span>
-            <svg class="w-4 h-4 text-brand-text/40 group-hover:text-brand-text/70 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <!-- Related Essays -->
-      {relatedWriting.length > 0 && (
-        <div class="relative border border-dashed border-brand-text/10 p-6 bg-brand-text/[0.01]">
-          <div class="absolute bottom-0 right-0 w-3 h-3 border-r-2 border-b-2 border-brand-accent5"></div>
-
-          <h3 class="text-xs font-semibold text-brand-text/60 mb-4 tracking-widest uppercase flex items-center gap-2">
-            <span class="w-1.5 h-1.5 bg-brand-accent5 rotate-45"></span>
-            Related Essays
-          </h3>
-
-          <div class="space-y-4">
-            {relatedWriting.map((piece) => (
-              <div class="group relative pl-4 border-l-2 border-dashed border-brand-text/10 hover:border-brand-accent5 transition-colors">
-                <a href={`/writing/${piece.slug}`} class="text-sm text-brand-text/80 hover:text-brand-text leading-snug block transition-colors">
-                  {piece.data.title}
-                </a>
-                <p class="text-xs text-brand-text/50 mt-1 font-mono">{formatDate(piece.data.date)}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
+    </aside>
   </div>
 </BaseLayout>
+
+<script>
+  const paper = document.getElementById('paper-scroll');
+
+  function updateReadingProgress() {
+    // On large screens the paper column scrolls internally; otherwise the page scrolls.
+    const usePaper = paper && paper.scrollHeight > paper.clientHeight + 1;
+    const el = usePaper ? paper : document.documentElement;
+    const max = el.scrollHeight - el.clientHeight;
+    const ratio = max > 0 ? Math.min(1, el.scrollTop / max) : 0;
+
+    const label = document.getElementById('reading-progress');
+    if (label) label.textContent = ratio.toFixed(2);
+
+    const marker = document.getElementById('progress-marker');
+    if (marker) marker.style.top = `calc(${ratio * 100}% - 0.5em)`;
+  }
+
+  updateReadingProgress();
+  paper?.addEventListener('scroll', updateReadingProgress, { passive: true });
+  window.addEventListener('scroll', updateReadingProgress, { passive: true });
+  window.addEventListener('resize', updateReadingProgress);
+</script>

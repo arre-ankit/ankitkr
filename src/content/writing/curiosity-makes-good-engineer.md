@@ -2,6 +2,7 @@
 title: 'Curiosity Makes a Good Engineer'
 description: 'On poking at systems, following questions, and why great engineers are professional wonderers'
 date: 2025-03-13
+cover: '/cover-curiosity.png'
 takeaways:
   - 'Curiosity is a debugging primitive: it updates your mental model'
   - 'Senior “intuition” is just compounded questions over time'

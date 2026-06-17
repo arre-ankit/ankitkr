@@ -6,6 +6,7 @@ const writing = defineCollection({
     title: z.string(),
     description: z.string(),
     date: z.coerce.date(),
+    cover: z.string().optional(),
     draft: z.boolean().optional(),
     takeaways: z.array(z.string()).optional(),
   }),

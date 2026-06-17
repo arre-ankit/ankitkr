@@ -1,6 +1,28 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+@font-face {
+  font-family: 'Departure Mono';
+  src: url('/departure-mono.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Arizona';
+  src: url('/arizona.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
+  --font-sans: 'Arizona', ui-serif, Georgia, serif;
+  --font-mono: 'Departure Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-pixel: 'Departure Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
   --color-brand-primary: #2c2c2c;
   --color-brand-dashboard: #e8e0d5;
   --color-brand-text: #1f1f1f;
@@ -17,12 +39,12 @@
 }
 
 :root {
-  --bg-body: #fcf5e4;
+  --bg-body: #FBFBFB;
   --bg-dashboard: #e8e0d5;
   --border-base: #d4c9bc;
   --text-primary: #1f1f1f;
-  --selection-bg: rgba(31, 31, 31, 0.9);
-  --selection-text: #fcf5e4;
+  --selection-bg: #ffe14d;
+  --selection-text: #1f1f1f;
 }
 
 html.dark {
@@ -30,7 +52,7 @@ html.dark {
   --bg-dashboard: #18181b;
   --border-base: #27272a;
   --text-primary: #e4e4e7;
-  --selection-bg: rgba(228, 228, 231, 0.9);
+  --selection-bg: #ffe14d;
   --selection-text: #09090b;
   --color-brand-text: #e4e4e7;
   --color-brand-primary: #d4d4d8;
@@ -52,7 +74,16 @@ html.dark {
     border-color: var(--border-base);
   }
 
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Departure Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  .paper-serif :is(h1, h2, h3, h4, h5, h6) {
+    font-family: 'Arizona', ui-serif, Georgia, serif;
+  }
+
   body {
+    font-family: 'Arizona', ui-serif, Georgia, serif;
     background-color: var(--bg-body);
     color: var(--text-primary);
     overflow-y: scroll;
