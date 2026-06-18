@@ -23,6 +23,9 @@ const {
   tocLabel = 'Writing',
   tocBase = '/writing',
 } = Astro.props;
+
+const pathname = Astro.url.pathname;
+const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
 ---
 
 {!barless && (
@@ -65,8 +68,8 @@ const {
           Light Mode
         </span>
       </button>
-      <a href="/writing" class="text-brand-text/60 hover:text-brand-text uppercase tracking-wide">Writing</a>
-      <a href="/projects" class="text-brand-text/60 hover:text-brand-text uppercase tracking-wide">Projects</a>
+      <a href="/writing" class={`uppercase tracking-wide ${isActive('/writing') ? 'text-[#0D3EFF] dark:text-[#FF5F1F]' : 'text-brand-text/60 hover:text-[#0D3EFF] dark:hover:text-[#FF5F1F]'}`}>Writing</a>
+      <a href="/projects" class={`uppercase tracking-wide ${isActive('/projects') ? 'text-[#0D3EFF] dark:text-[#FF5F1F]' : 'text-brand-text/60 hover:text-[#0D3EFF] dark:hover:text-[#FF5F1F]'}`}>Projects</a>
     </nav>
 
     <p class="font-pixel text-xs uppercase tracking-widest text-brand-text/50 mb-4">{tocLabel}</p>

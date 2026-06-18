@@ -19,9 +19,11 @@ function formatDate(date: Date) {
 }
 ---
 
-<BaseLayout title="Writing" description="Essays and long-form thoughts">
-  <SiteHeader variant="hero" />
-  <MobileNav barless title="Ankit Kumar" items={sortedWriting.map((p) => ({ slug: p.slug, title: p.data.title }))} />
+<BaseLayout title="Writing" description="Essays and long-form thoughts" wide={true}>
+  <div class="hidden lg:block">
+    <SiteHeader variant="compact" />
+  </div>
+  <MobileNav title="Writing" items={sortedWriting.map((p) => ({ slug: p.slug, title: p.data.title }))} barClass="-mt-8 sm:-mt-12" />
 
   <div class="space-y-8 px-5 sm:px-8 pb-12 pt-0">
     <div class="space-y-2">
@@ -35,7 +37,7 @@ function formatDate(date: Date) {
           href={`/writing/${piece.slug}`}
           class="group flex flex-col p-6 md:p-8 border-b border-r border-solid border-brand-text/15 hover:bg-brand-text/[0.015] dark:hover:bg-white/[0.02] transition-colors"
         >
-          <div class="relative aspect-[4/3] mb-6 flex items-center justify-center overflow-hidden border border-solid border-brand-text/15 bg-brand-text/[0.015] dark:bg-white/[0.02] group-hover:border-brand-text/30 transition-colors">
+          <div class="relative aspect-square mb-6 flex items-center justify-center overflow-hidden border border-solid border-brand-text/15 bg-brand-text/[0.015] dark:bg-white/[0.02] group-hover:border-brand-text/30 transition-colors">
             {piece.data.cover ? (
               <img src={piece.data.cover} alt={piece.data.title} class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
             ) : (
