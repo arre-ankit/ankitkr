@@ -10,6 +10,9 @@ export default defineConfig({
   integrations: [
     mdx(),
   ],
+  markdown: {
+    syntaxHighlight: false,
+  },
   site: 'https://ankitkr.com',
   vite: {
     server: {

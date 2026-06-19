@@ -74,6 +74,32 @@ html.dark {
     border-color: var(--border-base);
   }
 
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background-color: rgba(0, 0, 0, 0.85);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease;
+    cursor: zoom-out;
+  }
+
+  .lightbox.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .lightbox img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Departure Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   }
@@ -131,25 +157,70 @@ html.dark {
     @apply text-brand-text underline underline-offset-4 decoration-brand-text/40 hover:decoration-current hover:text-[#0D3EFF] dark:hover:text-[#FF5F1F] transition-colors;
   }
 
-  .prose ul,
+  .prose ul {
+    @apply mb-4 ml-6 list-disc;
+  }
+
   .prose ol {
-    @apply mb-4 ml-6;
+    @apply mb-4 ml-6 list-decimal;
   }
 
   .prose li {
     @apply mb-2;
   }
 
+  .prose li::marker {
+    color: color-mix(in srgb, var(--text-primary) 45%, transparent);
+  }
+
   .prose code {
-    @apply bg-brand-dashboard px-1.5 py-0.5 rounded text-sm font-mono text-brand-text;
+    @apply bg-brand-text/[0.05] px-1.5 py-0.5 rounded-sm text-[0.85em] font-mono text-brand-text;
   }
 
   .prose pre {
-    @apply bg-brand-dashboard p-4 rounded-lg overflow-x-auto mb-4 text-brand-text;
+    @apply relative bg-brand-text/[0.04] border border-solid border-brand-text/15 p-5 rounded-none overflow-x-auto my-8 text-[13px] leading-relaxed text-brand-text/90 font-mono;
+  }
+
+  .copy-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    font-family: 'Departure Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    padding: 0.25rem 0.45rem;
+    border: 1px solid var(--border-base);
+    background-color: var(--bg-body);
+    color: color-mix(in srgb, var(--text-primary) 55%, transparent);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .prose pre:hover .copy-btn,
+  .copy-btn:focus-visible {
+    opacity: 1;
+  }
+
+  .copy-btn:hover,
+  .copy-btn.is-copied {
+    color: #0d3eff;
+    border-color: color-mix(in srgb, var(--text-primary) 30%, transparent);
+  }
+
+  html.dark .copy-btn:hover,
+  html.dark .copy-btn.is-copied {
+    color: #ff5f1f;
+  }
+
+  .copy-btn.is-copied {
+    opacity: 1;
   }
 
   .prose pre code {
-    @apply bg-transparent p-0;
+    @apply bg-transparent p-0 text-[inherit] text-brand-text/90;
   }
 
   .prose blockquote {
@@ -157,10 +228,33 @@ html.dark {
   }
 
   .prose img {
-    @apply rounded-lg my-4;
+    @apply rounded-lg my-4 cursor-zoom-in;
   }
 
   .prose hr {
     @apply my-8 border-brand-text/20;
+  }
+
+  .prose table {
+    @apply w-full my-8 border-collapse text-[15px] overflow-x-auto;
+    @apply border border-solid border-brand-text/15;
+  }
+
+  .prose th,
+  .prose td {
+    @apply px-4 py-3 text-left border-b border-solid border-brand-text/10;
+  }
+
+  .prose th {
+    @apply text-brand-text font-semibold bg-brand-text/[0.04];
+  }
+
+  .prose thead tr:last-child th,
+  .prose thead tr:last-child td {
+    @apply border-b border-solid border-brand-text/20;
+  }
+
+  .prose tbody tr:last-child td {
+    @apply border-b-0;
   }
 }

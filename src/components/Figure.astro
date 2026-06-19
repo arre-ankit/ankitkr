@@ -1,0 +1,21 @@
+---
+interface Props {
+  src: string;
+  alt?: string;
+  caption?: string;
+  /** Set true to let the image sit edge-to-edge with no white panel. */
+  bare?: boolean;
+}
+
+const { src, alt = '', caption, bare = false } = Astro.props;
+---
+
+<figure class="not-prose my-10">
+  <div class={`overflow-hidden border border-solid border-brand-text/10 ${bare ? '' : 'bg-white'}`}>
+    <img src={src} alt={alt} class="w-full h-auto cursor-zoom-in" loading="lazy" data-zoomable />
+
+  </div>
+  {caption && (
+    <figcaption class="mt-3 text-center font-mono text-xs text-brand-text/45">{caption}</figcaption>
+  )}
+</figure>

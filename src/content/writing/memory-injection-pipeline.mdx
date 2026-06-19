@@ -1,0 +1,225 @@
+---
+title: 'Memory Injection Pipeline'
+description: 'How Production Vector Systems Actually Work?'
+date: 2025-03-13
+cover: '/rag-pipeline.png'
+---
+
+You already know what RAG is. 
+1. Documents go in
+2. get chunked 
+3. embedded
+4. vectors get stored 
+5. query comes in 
+6. nearest neighbors come back
+7. LLM answers 
+
+There's a diagram above in case you want to stare at it.
+
+Now forget that. Because the interesting question isn't what RAG is. 
+
+It's how you build one that doesn't break into pices when you uploads 500,000 PDFs simultaneously.
+
+## Obvious mistake in designing a RAG
+
+<br/>
+<h4 id="problem-1">Problem #1: Everything Happens Inside One Request</h4>
+
+```
+User -> Upload Documents → Parsing → chunk → embed → [Vector DB]
+```
+Only after all of that finishes does the request return 200.
+
+The problem is that every stage has a completely different performance profile.
+- Parsing PDFs is CPU heavy.
+- Chunking is memory heavy.
+- Embeddings are network heavy.
+- Vector writes are database heavy.
+
+<br/>
+
+<h4 id="problem-2">Problem #2: Embedding APIs Don't Care About Your Architecture</h4>
+<br/>
+Embedding models are external services and they have **Rate Limits**.
+
+Imagine 100 users uploading documents simultaneously.
+
+The embedding provider sees:
+
+```
+Request
+Request
+Request
+Request
+Request
+Request
+Request
+Request
+Request
+Request
+...
+```
+
+And responds with:
+```
+Success
+Success
+Success
+Success
+Success
+Success
+429
+429
+429
+429
+....
+```
+
+<h4 id="problem-3">Problem #3: Partial Success Is Worse Than Failure</h4>
+
+Assume you upload a document and function fails halfway while Parsing finished, Chunking finished but Embedding was 60% done and function crashed. Some vectors were written, some weren't. 
+
+```
+- Parsing -> 200 OK
+- Chunking -> 200 OK
+- Embedding was 60% done 
+
+Function crashed ❌ -> api timeout or rate limit 
+```
+
+In the architecture above, there is nowhere to resume from because there is no checkpoint or recovery point.
+
+There isn't even a copy of the chunked text sitting somewhere waiting to be retried. Because the chunks only existed in memory and embeddings only existed in memory.
+The entire pipeline was designed around the assumption that everything would succeed in one go.
+
+Let's start designing a pipeline that can survive failures, recover from them, and keep moving forward without starting from scratch every time.
+
+<br/>
+
+## Memory Injection Pipeline in Production
+
+In Production we splits the RAG pipeline into isolated services, each doing exactly one job in their seperate workers/lambda's this solves our <a href="#problem-1">Problem #1</a>.
+
+<Figure src="/services-architecture.png" alt="RAG pipeline into isolated services" />
+
+| Workers / Lambda's | What it does | Resource character |
+|---|---|---|
+| Parser | Parse files like pdf,xml,.. | CPU-heavy |
+| Chunker | Split into text chunks | CPU-heavy |
+| Embed | Call the embedding model and get vectors | I/O-bound |
+| Vector Store | Write vector embeddings to the vector store | Network-bound |
+
+### How we handle when user dumps millions of documents
+
+There's a decision that shapes everything downstream where does the those documents raw file actually lives?
+
+Naive approach: 
+- Stream the file through your API server
+- Client uploads to Server
+- Server upload to object storage. 
+
+This works for a 200 KB text file. It falls over for a 400-page PDF, and when 50 people doing it at once.
+
+<Figure src="/upload-naive-overloaded.png" alt="Clients streaming files through the API server, which is overloaded and under memory pressure" caption="Naive approach: every file streams through the API server, so it buckles under memory pressure." />
+
+Better approach: 
+- Client never sends the file to your API at all. 
+- API hands back a presigned URL: a temporary, signed link to a specific location in object storage 
+- Client uploads the file directly there. 
+
+Your API's only job is to generate that URL and record that an upload is expected.
+
+```
+1. Client → API: "I want to upload report.pdf"
+2. API → Object storage: generate a presigned PUT URL for this exact key
+3. API → Client: here's your URL, valid for N minutes
+4. Client → Object storage: PUT the file directly, using the presigned URL
+5. Object storage → API (via event notification): "this key now exists"
+6. API: create the document row (status: pending), enqueue a processing message
+```
+
+<Figure src="/upload-presigned-flow.png" alt="Clients upload files directly to object storage via presigned URLs; an event notification feeds an event queue that triggers the processing pipeline" caption="Better approach: clients upload directly to object storage via presigned URLs" />
+
+Benefit:
+- API never holds the file in memory or on disk 
+- Upload and the trigger are decoupled and the processing pipeline starts only once the object storage system confirms the bytes actually landed.
+
+### Queue 
+
+Once the file is sitting in object storage, something has to kick off parsing, chunking, embedding, and storing. The instinct is to do that directly when the upload returns 200 it should trigger parsing, parsing triggers embedding and so on...
+
+Uploading a document must return to the client instantly. Processing it can take several seconds like PDF parsing, multiple embedding API calls, a vector store write. 
+
+Queue is what separates them because it decouples upload and processing.
+
+Here's what that looks like with an actual document:
+```
+- User uploads `q3-board-deck.pdf` file with 80 pages
+- API generate Presigned url
+- Object storage confirms the file landed
+- API doesn't open the PDF or call an embedding model
+- API writes a message onto the queue 
+- Message now sits in the queue
+- Consumer pulls messages off the queue
+```
+
+<Figure src="/queue-system-design.png" alt="Queue system design" />
+
+Benefits:
+- It absorbs bursts like when user uploads 5,000,000 documents API accepts every single one instantly. (Becuase each upload is just a presigned URL handout and message drop in queue, both of which are fast.)
+- It gives you automatic retries with backoff. If a document fails mid-processing, the message isn't lost which solve our <a href="#problem-3">Problem #3</a>
+- It keeps downstream services alive because Consumer only pulls a limited number of documents at a time and take care of Rate Limits which solves our <a href="#problem-2">Problem #2</a>
+
+### Pointer-Passing Model
+
+One discipline runs through the entire pipeline: **pass pointers, not payloads.**
+
+Naive approach:
+- Chunk service finishes and hands the full chunk array directly to the embed service
+- Embed service finishes and hands the full embedding matrices directly to the Vector DB
+
+This works when a document is short. It fails when document produces thousands of chunks, because now you're passing megabytes of text and float arrays directly between stages through a queue message.
+ 
+Better Approach:
+- Services  never hand each other the actual data
+- Each service writes its output to object storage instead
+- Each service passes forward a UUID which point at where that output lives
+- The next stage reads from that key when it needs the data
+
+<br/>
+
+Here's what that looks like for one document in object storage using a fileID of `abc-123`:
+```
+- Chunk service reads file from `abc-123` object storage. 
+- Chunk service convert the file into small chunks.
+- Chunk service writes the result to `abc-123/chunks` in it's own object storage. 
+- Chunk service passes uuid `abc-123` forward.
+
+- Embed service receives uuid `abc-123` 
+- Embed service reads chunks from `abc-123/chunks` from object storage
+- Embeds service then convert chunks into vector embeddings 
+- Embed service writes the vectors embeddings to `abc-123/embeddings` in it's own object storage. 
+- Embed service passes uuid `abc-123` forward again.
+
+- Vector Store service receives uuid `abc-123` 
+- Vector Store service reads both `abc-123/chunks` and `abc-123/embeddings` object storages
+- Vector Store service writes the vectors into the actual Vector DB
+- Vector Store deletes `abc-123/chunks` and `abc-123/embeddings` object storage.
+```
+
+<Figure src="/pointer-passing-model.png" alt="Each stateless service reads from and writes to its own object storage bucket, passing only the abc-123 UUID token forward through queues" caption="Pointer-passing model: services hand each other a tiny UUID token while the actual data lives in object storage." />
+
+**Benefits:**
+ 
+- It passes fileID/uuid which is few dozen bytes no matter how large the document/pdf is.
+- It don't held anything in memory across services so each stage only loads the data it personally needs.
+- It handle crash recovery, assume if the embed stage crashes halfway through, the chunks are still sitting at `abc-123/chunks` in object storage so it solve our <a href="#problem-3">Problem #3</a>
+
+
+## Where to Go From Here
+
+Everything past this point Chunking, Embeddings, Vector store, Observability deserves its own deep dive, and I'll be writing them.
+ 
+> Curiosity is the only thing that scales linearly with how deep you're willing to go.
+
+---

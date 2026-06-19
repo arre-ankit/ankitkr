@@ -1,0 +1,146 @@
+---
+interface Row {
+  checks: string;
+  users: string;
+  cloudflare: number;
+  upstash: number;
+  aws: number;
+}
+
+interface Props {
+  title?: string;
+  subtitle?: string;
+  data: Row[];
+  /** Tighter paddings/typography for inline use inside an article. */
+  compact?: boolean;
+}
+
+const {
+  title = 'Cost Scale Visualizer',
+  subtitle,
+  data,
+  compact = false,
+} = Astro.props;
+
+const uid = `csv-${Math.random().toString(36).slice(2, 9)}`;
+
+const providers = [
+  { key: 'cloudflare', label: 'Cloudflare Durable Objects', color: 'var(--color-brand-accent6)' },
+  { key: 'upstash', label: 'Upstash Redis', color: 'var(--color-brand-accent8)' },
+  { key: 'aws', label: 'AWS ElastiCache', color: 'var(--color-brand-accent2)' },
+] as const;
+---
+
+<figure class={`not-prose my-10 ${compact ? '' : ''}`} data-cost-scale id={uid}>
+  <div class="border border-solid border-brand-text/15 bg-brand-text/[0.02]">
+    <div class={`${compact ? 'p-4 sm:p-5' : 'p-5 sm:p-7'}`}>
+      <header class="mb-5">
+        <h4 class="m-0 font-serif text-base font-semibold text-brand-text">{title}</h4>
+        {subtitle && <p class="m-0 mt-1 font-mono text-xs text-brand-text/50">{subtitle}</p>}
+      </header>
+
+      <!-- Scale picker -->
+      <div class="mb-6">
+        <div class="flex items-baseline justify-between font-mono text-xs text-brand-text/50">
+          <span>Scale</span>
+          <span data-scale-readout class="text-brand-text/80"><span data-readout-checks></span><span data-readout-users class="text-[#0D3EFF] dark:text-[#FF5F1F]"></span></span>
+        </div>
+        <input
+          type="range"
+          min="0"
+          max={data.length - 1}
+          value="0"
+          step="1"
+          data-scale-slider
+          class="mt-2 w-full accent-[var(--color-brand-accent6)]"
+          aria-label="Traffic scale"
+        />
+        <div class="mt-1 flex justify-between font-mono text-[10px] text-brand-text/35">
+          <span>{data[0]?.checks}</span>
+          <span>{data[data.length - 1]?.checks}</span>
+        </div>
+      </div>
+
+      <!-- Bars -->
+      <div class="space-y-3" data-bars>
+        {providers.map((p) => (
+          <div class="grid grid-cols-[7rem_1fr_auto] items-center gap-3 sm:grid-cols-[11rem_1fr_5rem]" data-row={p.key}>
+            <span class="truncate font-mono text-[11px] text-brand-text/70" title={p.label}>{p.label}</span>
+            <span class="h-3 w-full bg-brand-text/[0.06]">
+              <span class="block h-full transition-[width] duration-300 ease-out" data-fill style={`width:0%;background:${p.color}`}></span>
+            </span>
+            <span class="text-right font-mono text-xs tabular-nums text-brand-text/80" data-cost></span>
+          </div>
+        ))}
+      </div>
+
+      <!-- Verdict -->
+      <div class="mt-5 border-t border-solid border-brand-text/10 pt-4 font-mono text-xs text-brand-text/60">
+        Winner:
+        <span data-verdict class="font-semibold text-brand-text"></span>
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" data-cost-data set:html={JSON.stringify(data)}></script>
+</figure>
+
+<script>
+  const PROVIDERS = [
+    { key: 'cloudflare', label: 'Cloudflare' },
+    { key: 'upstash', label: 'Upstash' },
+    { key: 'aws', label: 'AWS ElastiCache' },
+  ];
+
+  function fmt(n: number) {
+    return '$' + n.toLocaleString('en-US');
+  }
+
+  function init(root: HTMLElement) {
+    const dataEl = root.querySelector<HTMLScriptElement>('[data-cost-data]');
+    if (!dataEl) return;
+    const data = JSON.parse(dataEl.textContent || '[]') as Array<Record<string, any>>;
+    if (!data.length) return;
+
+    const slider = root.querySelector<HTMLInputElement>('[data-scale-slider]')!;
+    const readoutChecks = root.querySelector<HTMLElement>('[data-readout-checks]')!;
+    const readoutUsers = root.querySelector<HTMLElement>('[data-readout-users]')!;
+    const rows = Array.from(root.querySelectorAll<HTMLElement>('[data-row]'));
+    const verdict = root.querySelector<HTMLElement>('[data-verdict]')!;
+
+    function render(i: number) {
+      const d = data[i];
+      const values = PROVIDERS.map((p) => Number(d[p.key]) || 0);
+      const max = Math.max(...values, 1);
+
+      readoutChecks.textContent = `${d.checks} checks/mo · `;
+      readoutUsers.textContent = `${d.users} users`;
+
+      let cheapest = { key: '', label: '', val: Infinity };
+      PROVIDERS.forEach((p) => {
+        const v = Number(d[p.key]) || 0;
+        if (v < cheapest.val) {
+          cheapest = { key: p.key, label: p.label, val: v };
+        }
+      });
+
+      rows.forEach((row) => {
+        const key = row.dataset.row!;
+        const v = Number(d[key]) || 0;
+        const fill = row.querySelector<HTMLElement>('[data-fill]')!;
+        const cost = row.querySelector<HTMLElement>('[data-cost]')!;
+        fill.style.width = `${(v / max) * 100}%`;
+        fill.style.opacity = key === cheapest.key ? '1' : '0.45';
+        cost.textContent = fmt(v);
+        cost.style.fontWeight = key === cheapest.key ? '700' : '400';
+      });
+
+      verdict.textContent = cheapest.label;
+    }
+
+    slider.addEventListener('input', () => render(Number(slider.value)));
+    render(Number(slider.value));
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-cost-scale]').forEach(init);
+</script>

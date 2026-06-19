@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SiteHeader from '../../components/SiteHeader.astro';
 import MobileNav from '../../components/MobileNav.astro';
+import Figure from '../../components/Figure.astro';
 import { SITE_CONFIG } from '../../config';
 
 export async function getStaticPaths() {
@@ -106,8 +107,9 @@ const articleSchema = {
             <img
               src={entry.data.cover}
               alt={entry.data.title}
-              class="w-full h-auto"
+              class="w-full h-auto cursor-zoom-in"
               loading="eager"
+              data-zoomable
             />
           </figure>
         )}
@@ -123,11 +125,11 @@ const articleSchema = {
           prose-ul:my-6 prose-ul:space-y-2 prose-li:text-brand-text/90 prose-li:leading-[1.8]
           prose-ol:my-6 prose-ol:space-y-2
           prose-code:font-mono prose-code:text-brand-accent4 prose-code:bg-brand-accent4/10 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-sm prose-code:text-sm prose-code:before:content-[''] prose-code:after:content-['']
-          prose-pre:bg-brand-dashboard prose-pre:text-brand-text prose-pre:border prose-pre:border-solid prose-pre:border-brand-text/20 prose-pre:rounded-none prose-pre:p-6 prose-pre:overflow-x-auto prose-pre:my-8
+          prose-pre:bg-brand-text/[0.04] prose-pre:text-brand-text/90 prose-pre:border prose-pre:border-solid prose-pre:border-brand-text/15 prose-pre:rounded-none prose-pre:p-5 prose-pre:text-[13px] prose-pre:leading-relaxed prose-pre:overflow-x-auto prose-pre:my-8
           prose-blockquote:border-l-2 prose-blockquote:border-brand-text/20 prose-blockquote:pl-6 prose-blockquote:py-1 prose-blockquote:my-8 prose-blockquote:italic prose-blockquote:text-brand-text/70
           prose-hr:border-t prose-hr:border-solid prose-hr:border-brand-text/15 prose-hr:my-12
           prose-img:border prose-img:border-solid prose-img:border-brand-text/10 prose-img:my-10 prose-img:mx-auto">
-          <Content />
+          <Content components={{ Figure }} />
         </div>
       </div>
     </article>

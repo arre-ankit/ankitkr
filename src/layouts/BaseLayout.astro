@@ -50,5 +50,71 @@ const { title, description, image, schema, wide = false, reader = false } = Astr
         </div>
       </main>
     )}
+    <div id="lightbox" class="lightbox" aria-hidden="true">
+      <img id="lightbox-img" src="" alt="" />
+    </div>
   </body>
 </html>
+
+<script>
+  // Click-to-zoom lightbox for content images
+  (function () {
+    const overlay = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lightbox-img') as HTMLImageElement | null;
+    if (!overlay || !lbImg) return;
+
+    const open = (src: string, alt: string) => {
+      lbImg.src = src;
+      lbImg.alt = alt;
+      overlay.classList.add('is-open');
+      document.documentElement.style.overflow = 'hidden';
+    };
+    const close = () => {
+      overlay.classList.remove('is-open');
+      document.documentElement.style.overflow = '';
+    };
+
+    document.addEventListener('click', (e) => {
+      const t = e.target as HTMLElement;
+      const img = t.closest('img[data-zoomable], .prose img') as HTMLImageElement | null;
+      if (!img || overlay.contains(img)) return;
+      open(img.currentSrc || img.src, img.alt);
+    });
+    overlay.addEventListener('click', close);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') close();
+    });
+  })();
+</script>
+
+<script>
+  function addCopyButtons() {
+    document.querySelectorAll('.prose pre').forEach((pre) => {
+      if (pre.querySelector('.copy-btn')) return;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'copy-btn';
+      btn.textContent = 'Copy';
+      btn.setAttribute('aria-label', 'Copy code');
+      btn.addEventListener('click', async () => {
+        const code = pre.querySelector('code')?.textContent ?? pre.textContent ?? '';
+        try {
+          await navigator.clipboard.writeText(code.replace(/\n$/, ''));
+          btn.textContent = 'Copied';
+          btn.classList.add('is-copied');
+          setTimeout(() => {
+            btn.textContent = 'Copy';
+            btn.classList.remove('is-copied');
+          }, 1500);
+        } catch {
+          btn.textContent = 'Failed';
+          setTimeout(() => (btn.textContent = 'Copy'), 1500);
+        }
+      });
+      pre.appendChild(btn);
+    });
+  }
+
+  addCopyButtons();
+  document.addEventListener('astro:after-swap', addCopyButtons);
+</script>
