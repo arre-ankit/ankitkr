@@ -212,7 +212,7 @@ const tagIcons: Record<string, string> = {
     tocBase="/projects"
   />
 
-  <div class="grid grid-cols-1 lg:grid-cols-12 lg:gap-0 lg:flex-1 lg:min-h-0 lg:overflow-hidden">
+  <div class="grid grid-cols-1 lg:grid-cols-12 lg:gap-0 lg:flex-1 lg:min-h-0 lg:overflow-hidden lg:px-8">
     <!-- Left: Table of Contents -->
     <aside class="hidden lg:block lg:col-span-2 lg:h-full lg:overflow-y-auto">
       <div class="pr-6 pt-1">
@@ -233,13 +233,13 @@ const tagIcons: Record<string, string> = {
 
     <!-- Center: Article -->
     <article id="paper-scroll" class="lg:col-span-9 paper-serif lg:px-8 lg:h-full lg:overflow-y-auto lg:pb-12">
-      <div class="mx-auto rounded-sm p-8 md:bg-white md:shadow-[0px_1px_4px_1px_rgba(0,0,0,0.05),0px_1px_1px_0px_rgba(0,0,0,0.08)] dark:md:bg-[#141417] dark:md:shadow-none lg:px-16 lg:py-20">
+      <div class="mx-auto max-w-3xl rounded-sm p-6 md:bg-white md:shadow-[0px_1px_4px_1px_rgba(0,0,0,0.05),0px_1px_1px_0px_rgba(0,0,0,0.08)] dark:md:bg-[#141417] dark:md:shadow-none lg:px-12 lg:py-14">
         <!-- Title block -->
-        <header class="text-center mb-12">
-          <p class="font-pixel text-xs uppercase tracking-widest text-brand-text/50 mb-6">
+        <header class="text-center mb-10">
+          <p class="font-pixel text-xs uppercase tracking-widest text-brand-text/50 mb-4">
             {project.year} &nbsp;|&nbsp; {project.status}
           </p>
-          <h1 class="text-4xl md:text-5xl text-brand-text leading-tight mb-6">
+          <h1 class="text-3xl md:text-4xl text-brand-text leading-tight mb-6">
             {project.name}
           </h1>
 
@@ -264,16 +264,16 @@ const tagIcons: Record<string, string> = {
             ))}
           </div>
 
-          <p class="text-brand-text/30 tracking-[0.4em] mt-10 select-none">-----</p>
+          <p class="text-brand-text/30 tracking-[0.4em] mt-8 select-none">-----</p>
         </header>
 
         {project.videoUrl && (
-          <div class="not-prose mb-12">
+          <div class="not-prose mb-10">
             <VideoPlayer videoUrl={project.videoUrl} title={project.name} />
           </div>
         )}
 
-        <div class="prose max-w-none text-[17px]
+        <div class="prose max-w-none text-[16px]
           prose-headings:text-brand-text prose-headings:tracking-tight
           prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4
           prose-p:text-brand-text/90 prose-p:leading-[1.8] prose-p:mb-6

@@ -11,10 +11,10 @@ const isActive = (href: string) =>
   href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(href + '/');
 const asciiSeparator = '▪ '.repeat(300);
 const titleSize = variant === 'hero' ? 'text-5xl md:text-7xl' : 'text-2xl md:text-3xl';
-const titleClass = `font-pixel ${titleSize} font-normal tracking-tight uppercase text-[#0D3EFF] dark:text-[#FF5F1F] leading-none`;
+const titleClass = `header-title font-pixel ${titleSize} font-normal tracking-tight uppercase text-[#0D3EFF] dark:text-[#FF5F1F] leading-none`;
 ---
 
-<header class="mb-10 px-5 sm:px-8">
+<header id="site-header" class={`site-header mb-10 px-5 sm:px-8 ${variant}`}>
   <div class="flex items-start gap-4 sm:items-end sm:justify-between">
     {variant === 'hero' ? (
       <h1 class={titleClass}><a href="/" class="hover:opacity-80 transition-opacity">{SITE_CONFIG.name}</a></h1>
@@ -41,19 +41,19 @@ const titleClass = `font-pixel ${titleSize} font-normal tracking-tight uppercase
           <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
             <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
           </svg>
-          Dark Mode
+          <span class="theme-text">Dark Mode</span>
         </span>
         <span class="theme-label theme-label-light">
           <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path>
           </svg>
-          Light Mode
+          <span class="theme-text">Light Mode</span>
         </span>
       </button>
       {SITE_CONFIG.nav.filter((item) => item.href !== '/').map((item) => (
         <a
           href={item.href}
-          class={`transition-colors uppercase tracking-wide ${
+          class={`nav-link transition-colors uppercase tracking-wide ${
             isActive(item.href)
               ? 'text-[#0D3EFF] dark:text-[#FF5F1F]'
               : 'text-brand-text/60 hover:text-[#0D3EFF] dark:hover:text-[#FF5F1F]'
@@ -77,6 +77,39 @@ const titleClass = `font-pixel ${titleSize} font-normal tracking-tight uppercase
   .theme-label.is-visible {
     display: inline-flex;
   }
+
+  /* Shrink the header as the reader scrolls so more of the page is for reading. */
+  .site-header.compact {
+    transition: margin-bottom 0.25s ease;
+  }
+  .site-header.compact .header-title {
+    display: inline-block;
+    transition: font-size 0.25s ease;
+  }
+  .site-header.compact .ascii-sep {
+    transition: margin-top 0.25s ease, opacity 0.25s ease;
+  }
+  .site-header.compact.is-scrolled {
+    margin-bottom: 0.75rem;
+  }
+  .site-header.compact.is-scrolled .header-title {
+    font-size: 1.125rem;
+  }
+  .site-header.compact.is-scrolled .ascii-sep {
+    margin-top: 0.5rem;
+    opacity: 0.5;
+  }
+  /* When scrolled, collapse the nav down to just the dark/light toggle icon. */
+  .site-header.compact .nav-link,
+  .site-header.compact .theme-text {
+    transition: opacity 0.2s ease;
+  }
+  .site-header.compact.is-scrolled .nav-link {
+    display: none;
+  }
+  .site-header.compact.is-scrolled .theme-text {
+    display: none;
+  }
 </style>
 
 <script>
@@ -97,4 +130,21 @@ const titleClass = `font-pixel ${titleSize} font-normal tracking-tight uppercase
   });
 
   syncThemeLabel();
+
+  // Collapse the header once the reader starts scrolling.
+  (function () {
+    const header = document.getElementById('site-header');
+    if (!header || !header.classList.contains('compact')) return;
+    const paper = document.getElementById('paper-scroll');
+
+    function onScroll() {
+      const usePaper = paper && paper.scrollHeight > paper.clientHeight + 1;
+      const top = usePaper ? paper.scrollTop : window.scrollY;
+      header.classList.toggle('is-scrolled', top > 8);
+    }
+
+    onScroll();
+    paper?.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('scroll', onScroll, { passive: true });
+  })();
 </script>

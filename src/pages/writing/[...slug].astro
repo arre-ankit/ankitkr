@@ -60,7 +60,7 @@ const articleSchema = {
 
   <MobileNav title={entry.data.title} items={sortedWriting.map((p) => ({ slug: p.slug, title: p.data.title }))} currentSlug={entry.slug} />
 
-  <div class="grid grid-cols-1 lg:grid-cols-12 lg:gap-0 lg:flex-1 lg:min-h-0 lg:overflow-hidden">
+  <div class="grid grid-cols-1 lg:grid-cols-12 lg:gap-0 lg:flex-1 lg:min-h-0 lg:overflow-hidden lg:px-8">
     <!-- Left: Table of Contents -->
     <aside class="hidden lg:block lg:col-span-2 lg:h-full lg:overflow-y-auto">
       <div class="pr-6 pt-1">
@@ -87,23 +87,23 @@ const articleSchema = {
 
     <!-- Center: Article -->
     <article id="paper-scroll" class="lg:col-span-9 paper-serif lg:px-8 lg:h-full lg:overflow-y-auto lg:pb-12">
-      <div class="mx-auto rounded-sm p-8 md:bg-white md:shadow-[0px_1px_4px_1px_rgba(0,0,0,0.05),0px_1px_1px_0px_rgba(0,0,0,0.08)] dark:md:bg-[#141417] dark:md:shadow-none lg:px-16 lg:py-20">
+      <div class="mx-auto max-w-3xl rounded-sm p-6 md:bg-white md:shadow-[0px_1px_4px_1px_rgba(0,0,0,0.05),0px_1px_1px_0px_rgba(0,0,0,0.08)] dark:md:bg-[#141417] dark:md:shadow-none lg:px-12 lg:py-14">
         <!-- Title block -->
-        <header class="text-center mb-12">
-          <p class="font-pixel text-xs uppercase tracking-widest text-brand-text/50 mb-6">
+        <header class="text-center mb-10">
+          <p class="font-pixel text-xs uppercase tracking-widest text-brand-text/50 mb-4">
             {wordCount.toLocaleString()} Words &nbsp;|&nbsp; {SITE_CONFIG.author.name}
           </p>
-          <h1 class="text-4xl md:text-5xl text-brand-text leading-tight mb-6">
+          <h1 class="text-3xl md:text-4xl text-brand-text leading-tight mb-4">
             {entry.data.title}
           </h1>
-          <p class="text-lg md:text-xl text-brand-text/60 leading-relaxed max-w-xl mx-auto">
+          <p class="text-base md:text-lg text-brand-text/60 leading-relaxed max-w-xl mx-auto">
             {entry.data.description}
           </p>
-          <p class="text-brand-text/30 tracking-[0.4em] mt-10 select-none">-----</p>
+          <p class="text-brand-text/30 tracking-[0.4em] mt-8 select-none">-----</p>
         </header>
 
         {entry.data.cover && (
-          <figure class="not-prose mb-12 overflow-hidden border border-solid border-brand-text/10">
+          <figure class="not-prose mb-10 overflow-hidden border border-solid border-brand-text/10">
             <img
               src={entry.data.cover}
               alt={entry.data.title}
@@ -115,7 +115,7 @@ const articleSchema = {
         )}
 
         <!-- Body -->
-        <div class="prose max-w-none text-[17px]
+        <div class="prose max-w-none text-[16px]
           prose-headings:text-brand-text prose-headings:tracking-tight
           prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4
           prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
