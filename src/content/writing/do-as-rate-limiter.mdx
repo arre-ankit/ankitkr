@@ -216,15 +216,6 @@ All of the above is just architecture talk. let's run real numbers using Cloudfl
 | Upstash Redis              | Pay per Redis command                                         |
 | AWS ElastiCache            | Fixed server rental (paid 24/7, regardless of usage)          |
 
-**Math at for 1M users which is approx 600M checks/month*:*
-
-| Option                     | Breakdown                                                                                                                                              | Estimated monthly cost |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------- |
-| Cloudflare Durable Objects | 599M billable requests ≈ $89.85; compute within free allowance ($0); SQLite reads free (first 25B rows included); ~550M paid writes ≈ $550; base fee $5 | ~$645                  |
-| Upstash Redis              | ~2 commands per check → 1.2B commands; at $0.20 per 100K commands                                                                                       | ~$2,400                |
-| AWS ElastiCache            | cache.r6g.large ≈ $0.206/hr ≈ $150/mo per node; +1 replica for resilience                                                                              | ~$300                  |
-
-
 
 Drag the slider to see how the cheapest option shifts as you scale:
 
