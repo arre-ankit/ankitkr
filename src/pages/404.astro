@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_CONFIG } from '../config';
 ---
 
 <BaseLayout title="404 - Page Not Found" description="This page doesn't exist">
@@ -125,7 +126,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             If you think this is a mistake, feel free to reach out.
           </p>
 
-          <a href="mailto:your.email@example.com" class="inline-flex items-center gap-2 text-sm font-medium text-brand-text hover:text-brand-accent3 transition-colors border-b border-solid border-brand-text/20 hover:border-brand-accent3 pb-0.5">
+          <a href={`mailto:${SITE_CONFIG.author.email}`} class="inline-flex items-center gap-2 text-sm font-medium text-brand-text hover:text-brand-accent3 transition-colors border-b border-solid border-brand-text/20 hover:border-brand-accent3 pb-0.5">
             Contact me
             <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>

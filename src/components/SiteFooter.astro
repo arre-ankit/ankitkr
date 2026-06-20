@@ -1,0 +1,15 @@
+---
+import { SITE_CONFIG } from '../config';
+import SocialLinks from './SocialLinks.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-16 px-5 sm:px-8">
+  <div class="border-t border-solid border-brand-text/10 pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <p class="text-xs font-mono text-brand-text/40 uppercase tracking-wide">
+      © {SITE_CONFIG.name}
+    </p>
+    <SocialLinks />
+  </div>
+</footer>

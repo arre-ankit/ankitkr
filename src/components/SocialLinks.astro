@@ -1,0 +1,75 @@
+---
+import { SITE_CONFIG } from '../config';
+
+interface Props {
+  /** Extra classes for the wrapping list. */
+  class?: string;
+  /** Icon size in pixels. */
+  size?: number;
+}
+
+const { class: className = '', size = 18 } = Astro.props;
+const { author } = SITE_CONFIG;
+
+const twitterHandle = author.twitter.replace(/^@/, '');
+
+const links = [
+  {
+    name: 'GitHub',
+    href: `https://github.com/${author.github}`,
+    label: `@${author.github}`,
+  },
+  {
+    name: 'Twitter',
+    href: `https://x.com/${twitterHandle}`,
+    label: `@${twitterHandle}`,
+  },
+  {
+    name: 'LinkedIn',
+    href: `https://www.linkedin.com/${author.linkedin}`,
+    label: author.linkedin,
+  },
+  {
+    name: 'Email',
+    href: `mailto:${author.email}`,
+    label: author.email,
+  },
+];
+---
+
+<ul class={`flex items-center gap-4 ${className}`}>
+  {links.map((link) => (
+    <li>
+      <a
+        href={link.href}
+        target={link.name === 'Email' ? undefined : '_blank'}
+        rel={link.name === 'Email' ? undefined : 'noopener noreferrer'}
+        aria-label={`${link.name} — ${link.label}`}
+        title={`${link.name} · ${link.label}`}
+        class="block text-brand-text/50 hover:text-[#0D3EFF] dark:hover:text-[#FF5F1F] transition-colors"
+      >
+        {link.name === 'GitHub' && (
+          <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.2 3.44 9.6 8.2 11.16.6.11.82-.25.82-.56 0-.28-.01-1.02-.02-2-3.34.71-4.04-1.58-4.04-1.58-.55-1.36-1.34-1.73-1.34-1.73-1.09-.73.08-.71.08-.71 1.2.08 1.83 1.21 1.83 1.21 1.07 1.8 2.81 1.28 3.5.98.11-.76.42-1.28.76-1.57-2.67-.3-5.47-1.3-5.47-5.79 0-1.28.47-2.33 1.23-3.15-.12-.3-.53-1.5.12-3.13 0 0 1-.32 3.3 1.2a11.6 11.6 0 016 0c2.28-1.52 3.29-1.2 3.29-1.2.65 1.63.24 2.83.12 3.13.77.82 1.23 1.87 1.23 3.15 0 4.5-2.81 5.48-5.49 5.77.43.36.81 1.08.81 2.18 0 1.58-.01 2.85-.01 3.24 0 .31.21.68.83.56A12.04 12.04 0 0024 12.29C24 5.78 18.63.5 12 .5z" />
+          </svg>
+        )}
+        {link.name === 'Twitter' && (
+          <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M18.9 1.5h3.68l-8.04 9.19L24 22.5h-7.41l-5.8-7.58-6.64 7.58H.46l8.6-9.83L0 1.5h7.59l5.24 6.93L18.9 1.5zm-1.29 18.8h2.04L6.49 3.6H4.3l13.31 16.7z" />
+          </svg>
+        )}
+        {link.name === 'LinkedIn' && (
+          <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 110-4.13 2.07 2.07 0 010 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.22.79 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z" />
+          </svg>
+        )}
+        {link.name === 'Email' && (
+          <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="4" width="20" height="16" rx="2" />
+            <path d="m22 7-10 6L2 7" />
+          </svg>
+        )}
+      </a>
+    </li>
+  ))}
+</ul>

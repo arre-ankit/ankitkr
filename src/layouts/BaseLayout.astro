@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import BaseHead from '../components/BaseHead.astro';
 import ScrollProgress from '../components/ScrollProgress.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 
 interface Props {
   title?: string;
@@ -47,6 +48,7 @@ const { title, description, image, schema, wide = false, reader = false } = Astr
       <main class="flex justify-center px-5 sm:px-8 py-8 sm:py-12 relative z-10">
         <div class={wide ? 'w-full max-w-[88rem]' : 'w-full max-w-4xl'}>
           <slot />
+          <SiteFooter />
         </div>
       </main>
     )}

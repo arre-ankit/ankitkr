@@ -16,11 +16,13 @@ const titleClass = `header-title font-pixel ${titleSize} font-normal tracking-ti
 
 <header id="site-header" class={`site-header mb-10 px-5 sm:px-8 ${variant}`}>
   <div class="flex items-start gap-4 sm:items-end sm:justify-between">
-    {variant === 'hero' ? (
-      <h1 class={titleClass}><a href="/" class="hover:opacity-80 transition-opacity">{SITE_CONFIG.name}</a></h1>
-    ) : (
-      <a href="/" class={`${titleClass} hover:opacity-80 transition-opacity`}>{SITE_CONFIG.name}</a>
-    )}
+    <div class="min-w-0">
+      {variant === 'hero' ? (
+        <h1 class={titleClass}><a href="/" class="hover:opacity-80 transition-opacity">{SITE_CONFIG.name}</a></h1>
+      ) : (
+        <a href="/" class={`${titleClass} hover:opacity-80 transition-opacity`}>{SITE_CONFIG.name}</a>
+      )}
+    </div>
 
     {variant === 'hero' && (
       <button id="toc-open" type="button" aria-label="Open menu" class="lg:hidden ml-auto mt-2 shrink-0 p-1 text-brand-text/70 hover:text-brand-text">
