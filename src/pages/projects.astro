@@ -24,8 +24,8 @@ import { projects } from '../data/projects';
           class="group flex flex-col p-6 md:p-8 border-b border-r border-solid border-brand-text/15 hover:bg-brand-text/[0.015] dark:hover:bg-white/[0.02] transition-colors"
         >
           <div class="relative aspect-square mb-6 flex items-center justify-center overflow-hidden border border-solid border-brand-text/15 bg-brand-text/[0.015] dark:bg-white/[0.02] group-hover:border-brand-text/30 transition-colors">
-            {project.mediaUrl ? (
-              <img src={project.mediaUrl} alt={project.name} class="absolute inset-0 w-full h-full object-contain" loading="lazy" />
+            {(project.logo || project.mediaUrl) ? (
+              <img src={project.logo || project.mediaUrl} alt={project.name} class="absolute inset-0 w-full h-full object-contain" loading="lazy" />
             ) : (
               <span class="font-pixel text-7xl md:text-8xl text-brand-text/[0.08] group-hover:text-[#0D3EFF]/25 dark:group-hover:text-[#FF5F1F]/30 transition-colors select-none">
                 {String(index + 1).padStart(2, '0')}

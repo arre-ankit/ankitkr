@@ -8,6 +8,123 @@ const slug = Astro.params.slug;
 
 const projects = [
   {
+    slug: 'docvid',
+    name: 'DocVid',
+    description: `Documentation is the most underrated growth lever in developer tools. A great README can 10x your adoption, but writing one that actually teaches, with step-by-step instructions, working code snippets, and clear explanations, is hard. Most docs are reference manuals dressed up as tutorials.
+
+DocVid turns the problem around. Instead of writing docs, you describe what you want to teach. Paste a documentation URL, a prompt, or a GitHub repo, and DocVid generates a full narrated, animated code lesson. It writes a step-by-step walkthrough, crafts a narration script, voices it with text-to-speech, and produces an animated code walkthrough synced to the audio. The result is an embeddable video you can share, export, or drop into your README.
+
+The architecture is a pnpm + Turborepo monorepo with three deployable packages. The web app (Next.js, deployed via OpenNext to Cloudflare) provides the UI and API routes. An AI worker (Cloudflare Worker with Workers AI, Workflows, KV, and R2) handles the heavy lifting: lesson generation, narration script writing, and TTS synthesis. A payments worker handles Dodo Payments checkout and webhooks. The shared package provides types and validation across all workspaces.
+
+The key design choice was splitting AI inference into its own worker. Lesson generation with LLMs can take 10-30 seconds, and tying up a web server request for that long is a non-starter. By routing generation through a Cloudflare Worker with Workflows, the UI can return immediately, poll for progress, and stream results as they're ready. This also makes the system resilient to AI provider failures, if one model times out, the workflow retries with a fallback.
+
+For the text-to-speech pipeline, DocVid generates a narration script first, then synthesizes it in chunks, and finally timestamps each sentence so the code animation can sync precisely with the audio. The timing alignment between spoken narration and visual code actions is the hardest technical problem, and solving it well is what separates DocVid from a screen recording with voiceover.`,
+    link: 'https://github.com/arre-ankit/docvid',
+    demo: 'https://www.docvid.in',
+    videoUrl: 'https://imghost.ankit992827.workers.dev/i/0j5r1f5v6m63.png',
+    logo: 'https://imghost.ankit992827.workers.dev/i/3u5b324w5c3m.svg',
+    tags: ['TypeScript', 'Next.js', 'AI', 'Video'],
+    status: 'Active',
+    year: '2026',
+    features: [
+      'AI-powered lesson generation, paste a docs URL or describe what you want to teach, and DocVid writes a full step-by-step code lesson',
+      'Narrated code walkthrough, auto-generated narration script with text-to-speech, synced to animated code actions',
+      'Monorepo architecture, pnpm + Turborepo with separate web, AI worker, and payments worker packages',
+      'Cloudflare AI pipeline, Workers AI for LLM inference, Workflows for long-running generation, KV for state, R2 for assets',
+      'Resilient generation, automatic retry with model fallback if AI providers time out or fail',
+      'Precise audio-code sync, sentence-level timestamps align spoken narration with visual code animations',
+      'Embeddable output, export as video or embed directly into READMEs and documentation sites',
+    ],
+    challenges: 'The hardest technical problem was aligning spoken narration with code animation at the sentence level. Text-to-speech is variable, the same sentence takes different durations depending on context, punctuation, and the TTS model. DocVid solves this by generating the narration script first, then synthesizing audio in chunks with timestamps, and finally mapping each code action to a specific timestamp range. If the alignment is off by even a second, the result feels disjointed. Getting this pipeline robust required building a timing buffer system that can stretch or compress pauses between sentences to maintain sync.',
+    learnings: 'DocVid taught me that AI-generated content is only as good as the structure you impose on it. Raw LLM output for a code lesson is rambling and unstructured. But if you first define a strict lesson schema (objective → setup → steps → recap), and have the LLM fill in each section with character limits and formatting rules, the output is dramatically better. The AI doesn\'t need to be creative, it needs to be constrained. The structure is what makes the output useful.',
+  },
+  {
+    slug: 'visa-explorer',
+    name: 'Visa Explorer',
+    description: `Planning international travel usually starts with a question: "Do I need a visa for this country?" The answer depends on what passport you hold, where you're going, and what type of travel you're planning. Checking every destination manually against government visa portals is tedious, and the information changes frequently enough that any PDF guide is outdated by the time you read it.
+
+Visa Explorer solves this in one search. Select your passport country and instantly see visa-free, visa-on-arrival, eVisa, eTA, and visa-required destinations worldwide — displayed on an interactive world map with color-coded countries. The map is the interface, blue means go, yellow means visa-on-arrival, red means you need to plan ahead. Click any country for details on entry requirements, allowed stay duration, and official sources.
+
+The data pipeline is the core of the product. Visa requirements are compiled from official government portals and IATA databases, processed through a series of build scripts that generate the country list, visa requirement matrix, airport routes, and exchange rates. Running \`npm run data\` triggers five separate data pipelines and produces verified JSON files that the app consumes at build time.
+
+Built with Astro 6 and React 19, deployed on Cloudflare Workers. The frontend uses shadcn/ui components with Tailwind CSS 4, the interactive map renders with d3-geo and topojson-client for country boundaries. Each passport has its own page (\`/country/india\`, \`/country/japan\`) for SEO and direct linking, making it easy to share results.
+
+The design philosophy is that travel information should be immediately scannable. A text table of visa requirements is hard to parse, a color-coded world map makes the answer obvious in under a second. The map interaction is deliberate, you don't need to read, you just look. Data is compiled and verified from official sources, with each entry linking to the relevant government portal so users can verify before they book.`,
+    link: 'https://github.com/arre-ankit/visa-explorer',
+    demo: 'https://www.freevisacountries.com',
+    videoUrl: 'https://imghost.ankit992827.workers.dev/i/4w6h423n1n3g.png',
+    logo: 'https://imghost.ankit992827.workers.dev/i/0o2t715b565k.png',
+    tags: ['TypeScript', 'Astro', 'React', 'Travel'],
+    status: 'Active',
+    year: '2026',
+    features: [
+      'Interactive world map, color-coded visa requirements on a d3-geo rendered world map, blue for visa-free, yellow for visa-on-arrival, red for visa-required',
+      'Passport-based search, select your passport country and get personalized visa information for every destination worldwide',
+      'Comprehensive data, visa-free, visa-on-arrival, eVisa, eTA, and visa-required status for all countries, with allowed stay duration and official sources',
+      'Automated data pipeline, five build scripts compile visa requirements from government portals and IATA databases into verified JSON',
+      'SEO-optimized passport pages, individual pages for every passport country for direct linking and search engine discovery',
+      'Astro + React architecture, static site generation with server-side rendering via Cloudflare Workers for fast global loads',
+      'Additional travel tools, airport route maps and currency exchange rate data alongside visa information',
+    ],
+    challenges: 'The hardest part of Visa Explorer was the data. Government visa portals are notoriously inconsistent, some publish machine-readable data, others have PDF scans of handwritten tables. The data pipeline had to handle multiple formats, manual verification steps, and a fallback chain where each data source is cross-referenced against at least two others. A single incorrect visa entry could send someone to the wrong airport with the wrong paperwork, so data integrity was non-negotiable. The solution was a multi-stage pipeline: scrape → cross-verify → flag conflicts for manual review → compile → test against known travel routes.',
+    learnings: 'Visa Explorer confirmed something I\'ve suspected for a while: the best consumer internet products aren\'t necessarily the ones with the most sophisticated technology, they\'re the ones that make complex, frequently-changing information instantly accessible in a visual format. The map interaction is technically simple, but it transforms a data problem (which countries require visas?) into a visual answer that takes less than a second to parse. The hard work was all in the data pipeline, not the frontend.',
+  },
+  {
+    slug: 'speechsync-ai',
+    name: 'SpeechSync AI',
+    description: `For many international developers, the bottleneck to landing a remote job isn't technical skill, it's pronunciation. You can write flawless code, ace the system design interview, and still get passed over because the hiring manager couldn't understand you on the video call. Traditional language learning apps focus on vocabulary and grammar, which is the wrong abstraction. The problem is phonetic: specific sounds, stress patterns, and intonation that differ between your native language and English.
+
+SpeechSync.ai is a focused tool for this specific problem. Record yourself speaking, and the system runs your audio through Whisper ASR (OpenAI's speech recognition model, running on Cloudflare AI) to get a transcription. Then GPT-3.5 analyzes the transcription against the target text and generates detailed pronunciation feedback: which words were mispronounced, what the correct phonetic pattern should be, and specific exercises to improve.
+
+The architecture is deliberately split: a Next.js 14 frontend handles the recording UI (using React Media Recorder for browser-based audio capture), and a Cloudflare Worker backend handles the AI pipeline. This split matters because the AI inference is compute-heavy and benefits from edge deployment, Cloudflare Workers run close to the user, which reduces latency for the audio upload and transcription step.
+
+The key design decision was using Whisper on Cloudflare AI rather than a third-party transcription API. Cloudflare AI gives you Whisper inference at the edge with no cold starts, which means the transcription step is fast enough to feel real-time. The GPT-3.5 analysis adds a few seconds, but the overall loop, speak, wait, read feedback, is tight enough to be useful for iterative practice.`,
+    link: 'https://github.com/arre-ankit/speechsync-ai',
+    demo: 'https://speechsync-ai.pages.dev',
+    videoUrl: 'https://imghost.ankit992827.workers.dev/i/2a4i3m00172r.png',
+    logo: 'https://imghost.ankit992827.workers.dev/i/1v4i254v2d0p.png',
+    tags: ['TypeScript', 'Next.js', 'Whisper ASR', 'Cloudflare AI', 'GPT-3.5'],
+    status: 'Active',
+    year: '2024',
+    features: [
+      'Real-time speech recording, browser-based audio capture with React Media Recorder',
+      'Whisper ASR transcription, OpenAI\'s speech recognition model running on Cloudflare AI at the edge',
+      'AI pronunciation analysis, GPT-3.5 generates detailed feedback on mispronounced words and phonetic patterns',
+      'Personalized improvement recommendations, specific exercises tailored to your pronunciation patterns',
+      'Edge-deployed inference, Cloudflare Workers minimize latency for audio upload and transcription',
+      'No account required, just open the browser and start practicing',
+    ],
+    challenges: 'The hardest part was making the feedback actionable. It\'s easy to tell someone "you mispronounced \'algorithm\'", it\'s much harder to explain that they\'re stressing the wrong syllable (AL-go-rithm vs al-GO-rithm) and give them a specific exercise to fix it. Getting GPT-3.5 to produce consistently useful phonetic feedback required careful prompt engineering with examples of good pronunciation coaching, not just error detection.',
+    learnings: 'SpeechSync taught me that the most impactful AI applications aren\'t the ones that do something impossible, they\'re the ones that make something expensive accessible. A human pronunciation coach costs $50-100/hour and is available in limited time zones. SpeechSync gives you 80% of that value for free, available 24/7, with infinite patience. The AI doesn\'t need to be perfect, it just needs to be good enough and always available.',
+  },
+  {
+    slug: 'pullscan',
+    name: 'PullScan',
+    description: `Reading pull requests is one of those tasks that scales terribly with team size. When you're a team of 3, you can read every PR. At 10 people, you're skimming. At 50, you've given up and just approve things that look reasonable. The information is all there in the diff, but extracting the intent, the tradeoffs, the "why" behind the changes requires reading every file, understanding the context, and holding the whole thing in your head.
+
+PullScan attacks this problem with AI. Point it at any GitHub repository and it generates comprehensive summaries of pull requests and individual commits. But the real power is the RAG-powered chat: it indexes the codebase and lets you ask questions like "what changed in the authentication module this week?" or "why was this function refactored?" and get context-aware answers grounded in the actual code.
+
+The architecture is a Next.js 15 frontend with a backend powered by LangBase for the AI orchestration and UpStash for caching. LangBase handles the RAG pipeline, chunking the codebase, embedding it, and retrieving relevant context for each query. Google AI Studio provides the language model. The separation of concerns here matters: the frontend is just a thin UI layer, all the intelligence lives in the backend services.
+
+This is the kind of tool that gets more valuable as the codebase grows. For a small project, you can just read the PRs. But for a large, active repository with dozens of contributors, having an AI that can synthesize changes across multiple PRs and explain them in plain English is genuinely useful.`,
+    link: 'https://github.com/arre-ankit/PullScan',
+    demo: null,
+    videoUrl: 'https://github.com/user-attachments/assets/29776e3c-f428-41ca-aa67-d723333b2f0d',
+    logo: 'https://imghost.ankit992827.workers.dev/i/2p6a006m050i.png',
+    tags: ['TypeScript', 'Next.js', 'LangBase', 'AI', 'RAG'],
+    status: 'Active',
+    year: '2025',
+    features: [
+      'AI-powered PR summaries, comprehensive breakdowns of pull request changes without reading every line',
+      'Commit-level summaries, understand individual commits with concise, AI-generated explanations',
+      'RAG-powered codebase chat, ask questions about the code and get context-aware answers grounded in the actual repository',
+      'LangBase integration, production-grade RAG pipeline for chunking, embedding, and retrieval',
+      'Caching with UpStash, fast responses for repeated queries without redundant API calls',
+    ],
+    challenges: 'The hardest problem in building PullScan was getting the RAG pipeline right. Naive chunking of source code produces terrible results, you end up with chunks that split functions in half or separate a class from its methods. The solution was to use AST-aware chunking that respects code boundaries, combined with metadata enrichment (file path, function name, class context) so the retrieval step can find semantically relevant code even when the query uses different terminology than the source.',
+    learnings: 'PullScan taught me that the gap between "AI demo" and "AI tool people actually use" is mostly about retrieval quality. The language model is the easy part, it\'s good at summarizing once you give it the right context. The hard part is finding the right context in a large codebase. RAG is not just "embed and retrieve", it\'s a whole pipeline of chunking strategies, metadata enrichment, re-ranking, and context window management that determines whether the output is useful or hallucinated.',
+  },
+  {
     slug: 'termreel',
     name: 'termreel',
     description: `There's a fundamental asymmetry in developer tooling: building something cool in the terminal is easy, but showing it to someone else is surprisingly hard. You can't just screenshot a terminal, the magic is in the motion, the typing, the output streaming in. Screen recordings are clunky, require manual setup, and the result is usually a 40MB MP4 that looks terrible on GitHub.
@@ -20,6 +137,7 @@ The architecture is intentionally simple: TypeScript, Commander.js for the CLI, 
     link: 'https://github.com/arre-ankit/termreel',
     demo: null,
     videoUrl: 'https://raw.githubusercontent.com/arre-ankit/termreel/refs/heads/main/.github/termreel-demo.gif',
+    logo: 'https://imghost.ankit992827.workers.dev/i/5m5z3m3z343h.png',
     tags: ['TypeScript', 'CLI', 'AI', 'VHS'],
     status: 'Active',
     year: '2026',
@@ -48,6 +166,7 @@ Under the hood, repochart uses the GitHub CLI (\`gh\`) for all API calls, no tok
     link: 'https://github.com/arre-ankit/repochart',
     demo: null,
     videoUrl: 'https://raw.githubusercontent.com/arre-ankit/repochart/refs/heads/main/.github/repochart-compare-demo.gif',
+    logo: 'https://imghost.ankit992827.workers.dev/i/4j3d031i1w31.png',
     tags: ['TypeScript', 'CLI', 'GitHub API'],
     status: 'Active',
     year: '2026',
@@ -76,6 +195,7 @@ The philosophy here is that the best developer tools are the ones with the small
     link: 'https://github.com/arre-ankit/zombiefiles',
     demo: null,
     videoUrl: 'https://raw.githubusercontent.com/arre-ankit/zombiefiles/refs/heads/main/.github/zombiefiles-demo.gif',
+    logo: 'https://imghost.ankit992827.workers.dev/i/6r6c106g1n39.png',
     tags: ['TypeScript', 'CLI', 'Git'],
     status: 'Active',
     year: '2026',
@@ -90,32 +210,6 @@ The philosophy here is that the best developer tools are the ones with the small
     learnings: 'zombiefiles is a case study in the value of constraint. The entire tool is under 200 lines of TypeScript. No dependencies beyond Commander.js for argument parsing. No config files. No plugins. The temptation to add features, "what if it could also detect unused exports?" "what if it integrated with your CI?", is real, but resisting it is what keeps the tool useful. The best CLI tools are the ones you can explain in one sentence.',
   },
   {
-    slug: 'pullscan',
-    name: 'PullScan',
-    description: `Reading pull requests is one of those tasks that scales terribly with team size. When you're a team of 3, you can read every PR. At 10 people, you're skimming. At 50, you've given up and just approve things that look reasonable. The information is all there in the diff, but extracting the intent, the tradeoffs, the "why" behind the changes requires reading every file, understanding the context, and holding the whole thing in your head.
-
-PullScan attacks this problem with AI. Point it at any GitHub repository and it generates comprehensive summaries of pull requests and individual commits. But the real power is the RAG-powered chat: it indexes the codebase and lets you ask questions like "what changed in the authentication module this week?" or "why was this function refactored?" and get context-aware answers grounded in the actual code.
-
-The architecture is a Next.js 15 frontend with a backend powered by LangBase for the AI orchestration and UpStash for caching. LangBase handles the RAG pipeline, chunking the codebase, embedding it, and retrieving relevant context for each query. Google AI Studio provides the language model. The separation of concerns here matters: the frontend is just a thin UI layer, all the intelligence lives in the backend services.
-
-This is the kind of tool that gets more valuable as the codebase grows. For a small project, you can just read the PRs. But for a large, active repository with dozens of contributors, having an AI that can synthesize changes across multiple PRs and explain them in plain English is genuinely useful.`,
-    link: 'https://github.com/arre-ankit/PullScan',
-    demo: null,
-    videoUrl: 'https://github.com/user-attachments/assets/29776e3c-f428-41ca-aa67-d723333b2f0d',
-    tags: ['TypeScript', 'Next.js', 'LangBase', 'AI', 'RAG'],
-    status: 'Active',
-    year: '2025',
-    features: [
-      'AI-powered PR summaries, comprehensive breakdowns of pull request changes without reading every line',
-      'Commit-level summaries, understand individual commits with concise, AI-generated explanations',
-      'RAG-powered codebase chat, ask questions about the code and get context-aware answers grounded in the actual repository',
-      'LangBase integration, production-grade RAG pipeline for chunking, embedding, and retrieval',
-      'Caching with UpStash, fast responses for repeated queries without redundant API calls',
-    ],
-    challenges: 'The hardest problem in building PullScan was getting the RAG pipeline right. Naive chunking of source code produces terrible results, you end up with chunks that split functions in half or separate a class from its methods. The solution was to use AST-aware chunking that respects code boundaries, combined with metadata enrichment (file path, function name, class context) so the retrieval step can find semantically relevant code even when the query uses different terminology than the source.',
-    learnings: 'PullScan taught me that the gap between "AI demo" and "AI tool people actually use" is mostly about retrieval quality. The language model is the easy part, it\'s good at summarizing once you give it the right context. The hard part is finding the right context in a large codebase. RAG is not just "embed and retrieve", it\'s a whole pipeline of chunking strategies, metadata enrichment, re-ranking, and context window management that determines whether the output is useful or hallucinated.',
-  },
-  {
     slug: 'spotify-popularity-game',
     name: 'Spotify Popularity Game',
     description: `Here's a fun experiment in calibration: take two songs, show their album covers side by side, and ask "which one is more popular on Spotify?" It sounds trivially easy, until you play it and realize your intuitions about music popularity are wildly miscalibrated.
@@ -128,6 +222,7 @@ Built with Next.js 14 and deployed on Cloudflare Pages. The Spotify Web API prov
     link: 'https://github.com/arre-ankit/spotify-popularity-game',
     demo: 'https://main.higher-lower-spotify-game.pages.dev',
     videoUrl: 'https://github.com/user-attachments/assets/b3238e06-0fec-4f4f-9b03-f9b84fac71e3',
+    logo: 'https://imghost.ankit992827.workers.dev/i/1k4l5p4g0n49.png',
     tags: ['TypeScript', 'Next.js', 'Spotify API', 'Cloudflare Pages'],
     status: 'Active',
     year: '2024',
@@ -141,33 +236,6 @@ Built with Next.js 14 and deployed on Cloudflare Pages. The Spotify Web API prov
     ],
     challenges: 'The main challenge was curating the song pool. If you only use top-100 songs, the game is too easy, everyone knows Drake is popular. If you include obscure tracks, it becomes random guessing. The sweet spot is a mix: some mainstream hits, some genre-specific popular tracks, some viral TikTok songs, and some critically acclaimed but niche artists. Getting this balance right required iterating on the song selection algorithm and testing with real players.',
     learnings: 'This project reinforced something I find fascinating: humans are terrible at estimating popularity outside their own bubble. We dramatically overestimate the popularity of things we personally like and underestimate things we\'ve never encountered. The Spotify popularity score is a clean, quantitative measure of this bias. Building the game was straightforward, the interesting part was watching people play it and seeing their calibration improve over time.',
-  },
-  {
-    slug: 'speechsync-ai',
-    name: 'SpeechSync AI',
-    description: `For many international developers, the bottleneck to landing a remote job isn't technical skill, it's pronunciation. You can write flawless code, ace the system design interview, and still get passed over because the hiring manager couldn't understand you on the video call. Traditional language learning apps focus on vocabulary and grammar, which is the wrong abstraction. The problem is phonetic: specific sounds, stress patterns, and intonation that differ between your native language and English.
-
-SpeechSync.ai is a focused tool for this specific problem. Record yourself speaking, and the system runs your audio through Whisper ASR (OpenAI's speech recognition model, running on Cloudflare AI) to get a transcription. Then GPT-3.5 analyzes the transcription against the target text and generates detailed pronunciation feedback: which words were mispronounced, what the correct phonetic pattern should be, and specific exercises to improve.
-
-The architecture is deliberately split: a Next.js 14 frontend handles the recording UI (using React Media Recorder for browser-based audio capture), and a Cloudflare Worker backend handles the AI pipeline. This split matters because the AI inference is compute-heavy and benefits from edge deployment, Cloudflare Workers run close to the user, which reduces latency for the audio upload and transcription step.
-
-The key design decision was using Whisper on Cloudflare AI rather than a third-party transcription API. Cloudflare AI gives you Whisper inference at the edge with no cold starts, which means the transcription step is fast enough to feel real-time. The GPT-3.5 analysis adds a few seconds, but the overall loop, speak, wait, read feedback, is tight enough to be useful for iterative practice.`,
-    link: 'https://github.com/arre-ankit/speechsync-ai',
-    demo: 'https://speechsync-ai.pages.dev',
-    videoUrl: 'https://github.com/user-attachments/assets/e1ccd982-c6b4-4d89-85fd-0c80b5034bba',
-    tags: ['TypeScript', 'Next.js', 'Whisper ASR', 'Cloudflare AI', 'GPT-3.5'],
-    status: 'Active',
-    year: '2024',
-    features: [
-      'Real-time speech recording, browser-based audio capture with React Media Recorder',
-      'Whisper ASR transcription, OpenAI\'s speech recognition model running on Cloudflare AI at the edge',
-      'AI pronunciation analysis, GPT-3.5 generates detailed feedback on mispronounced words and phonetic patterns',
-      'Personalized improvement recommendations, specific exercises tailored to your pronunciation patterns',
-      'Edge-deployed inference, Cloudflare Workers minimize latency for audio upload and transcription',
-      'No account required, just open the browser and start practicing',
-    ],
-    challenges: 'The hardest part was making the feedback actionable. It\'s easy to tell someone "you mispronounced \'algorithm\'", it\'s much harder to explain that they\'re stressing the wrong syllable (AL-go-rithm vs al-GO-rithm) and give them a specific exercise to fix it. Getting GPT-3.5 to produce consistently useful phonetic feedback required careful prompt engineering with examples of good pronunciation coaching, not just error detection.',
-    learnings: 'SpeechSync taught me that the most impactful AI applications aren\'t the ones that do something impossible, they\'re the ones that make something expensive accessible. A human pronunciation coach costs $50-100/hour and is available in limited time zones. SpeechSync gives you 80% of that value for free, available 24/7, with infinite patience. The AI doesn\'t need to be perfect, it just needs to be good enough and always available.',
   },
 ];
 
@@ -196,6 +264,10 @@ const tagIcons: Record<string, string> = {
   'Cloudflare AI': 'CF',
   'GPT-3.5': 'GPT',
   'Git': 'GIT',
+  'Video': 'VID',
+  'Travel': 'TRV',
+  'Astro': 'A',
+  'React': 'R',
 };
 ---
 
@@ -239,9 +311,16 @@ const tagIcons: Record<string, string> = {
           <p class="font-pixel text-xs uppercase tracking-widest text-brand-text/50 mb-4">
             {project.year} &nbsp;|&nbsp; {project.status}
           </p>
-          <h1 class="text-3xl md:text-4xl text-brand-text leading-tight mb-6">
-            {project.name}
-          </h1>
+          <div class="flex items-center justify-center gap-5 mb-6">
+            {project.logo && (
+              <div class="w-14 h-14 min-w-14 rounded-xl overflow-hidden border border-solid border-brand-text/10 bg-brand-text/[0.05]">
+                <img src={project.logo} alt={project.name} class="w-full h-full object-cover" />
+              </div>
+            )}
+            <h1 class="text-3xl md:text-4xl text-brand-text leading-tight">
+              {project.name}
+            </h1>
+          </div>
 
           <div class="flex flex-wrap items-center justify-center gap-2 mb-5">
             {project.link && (

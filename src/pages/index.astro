@@ -4,8 +4,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import MobileNav from '../components/MobileNav.astro';
 import StackSection from '../components/StackSection.astro';
+import ProjectsSection from '../components/ProjectsSection.astro';
 import SocialLinks from '../components/SocialLinks.astro';
-import { projects } from '../data/projects';
 
 const writingEntries = await getCollection('writing', ({ data }) => data.draft !== true);
 const sortedWriting = writingEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
@@ -167,37 +167,7 @@ const sortedWriting = writingEntries.sort((a, b) => b.data.date.valueOf() - a.da
       <StackSection />
 
       <!-- ═══ PROJECTS ═══ -->
-      <section>
-        <div class="flex items-baseline justify-between mb-3">
-          <h2 class="text-xl font-semibold">Projects</h2>
-          <a href="/projects" class="font-pixel text-[10px] uppercase tracking-wide text-brand-text/40 hover:text-brand-text transition-colors">All →</a>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-3 border-t border-b border-solid border-brand-text/10">
-          {projects.slice(0, 3).map((project, index) => (
-            <a
-              href={`/projects/${project.slug}`}
-              class="group flex flex-col py-6 sm:px-5 sm:first:pl-0 sm:last:pr-0 sm:border-l sm:border-solid sm:border-brand-text/10 sm:first:border-l-0"
-            >
-              <div class="relative aspect-[4/3] mb-4 flex items-center justify-center overflow-hidden border border-solid border-brand-text/15 bg-brand-text/[0.015] dark:bg-white/[0.02] group-hover:border-brand-text/30 transition-colors">
-                {project.mediaUrl ? (
-                  <img src={project.mediaUrl} alt={project.name} class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
-                ) : (
-                  <span class="font-pixel text-6xl text-brand-text/[0.08] group-hover:text-[#0D3EFF]/25 dark:group-hover:text-[#FF5F1F]/30 transition-colors select-none">
-                    {String(index + 1).padStart(2, '0')}
-                  </span>
-                )}
-              </div>
-              <h3 class="text-lg text-brand-text/90 group-hover:text-[#0D3EFF] dark:group-hover:text-[#FF5F1F] transition-colors leading-snug">
-                {project.name}
-              </h3>
-              {project.description && (
-                <p class="text-sm text-brand-text/55 mt-2 leading-relaxed line-clamp-3">{project.description}</p>
-              )}
-            </a>
-          ))}
-        </div>
-      </section>
+      <ProjectsSection />
     </div>
 </BaseLayout>
 
