@@ -41,7 +41,7 @@ export const projects: Project[] = [
     name: 'SpeechSync AI',
     description: 'The bottleneck for many international developers isn\'t coding skill, it\'s pronunciation. SpeechSync records your speech, runs it through Whisper ASR, then uses GPT-3.5 for detailed pronunciation feedback. A personal accent coach in your browser.',
     link: 'https://github.com/arre-ankit/speechsync-ai',
-    demo: 'https://speechsync-ai.pages.dev',
+    demo: 'https://speechsync-web.ankit992827.workers.dev/',
     tags: ['TypeScript', 'Next.js', 'Whisper', 'Cloudflare AI'],
     status: 'Active',
     year: '2024',
