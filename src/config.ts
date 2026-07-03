@@ -5,7 +5,7 @@ export const SITE_CONFIG = {
   url: 'https://ankitkr.com',
   author: {
     name: 'Ankit Kumar',
-    email: 'arre.ankit@gmail.com',
+    email: 'work@ankitkr.com',
     twitter: '@arre_ankit',
     github: 'arre-ankit',
     linkedin: 'in/arre-ankit',
